@@ -1,42 +1,63 @@
-import { eq } from "drizzle-orm"
-import { requireUser } from "@/lib/auth/guards"
-import { db } from "@/lib/db"
-import { users, batches } from "@/lib/db/schema"
+import Link from "next/link"
+import { requireActiveExam, listBatches } from "@/lib/db/queries"
 
 export const metadata = { title: "Dashboard" }
 
+const RESOURCES = [
+  { label: "PDFs", href: "/pdfs", desc: "Notes and papers" },
+  { label: "Gallery", href: "/gallery", desc: "Reference sheets" },
+  { label: "Tests", href: "/tests", desc: "Practice papers" },
+]
+
 export default async function Dashboard() {
-  const sessionUser = await requireUser()
-  const row = await db.query.users.findFirst({ where: eq(users.id, sessionUser.id) })
-  const list = row?.activeExamId
-    ? await db.query.batches.findMany({ where: eq(batches.examId, row.activeExamId) })
-    : []
+  const { examId } = await requireActiveExam()
+  const batchList = await listBatches(examId)
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       <section>
-        <h1 className="text-2xl font-semibold">Choose your path</h1>
-        <div className="mt-4 flex gap-3">
-          {["PDFs", "Gallery", "Tests"].map((p) => (
-            <button
-              key={p}
-              disabled
-              title="Coming soon"
-              className="rounded-md border px-4 py-2 opacity-50"
+        <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          Study material
+        </h2>
+        <div className="mt-6 grid gap-px border bg-border sm:grid-cols-3">
+          {RESOURCES.map((r) => (
+            <Link
+              key={r.href}
+              href={r.href}
+              className="group bg-background p-6 transition-colors hover:bg-accent"
             >
-              {p}
-            </button>
+              <p className="font-display text-xl font-semibold">{r.label}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{r.desc}</p>
+              <span className="mt-4 block font-mono text-xs uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
+                Open →
+              </span>
+            </Link>
           ))}
         </div>
       </section>
+
       <section>
-        <h2 className="text-lg font-semibold">Available batches</h2>
-        {list.length === 0 ? (
-          <p className="mt-2 text-muted-foreground">No batches yet.</p>
+        <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          Batches
+        </h2>
+        {batchList.length === 0 ? (
+          <p className="mt-6 text-muted-foreground">
+            No batches yet. Check back once your batch is published.
+          </p>
         ) : (
-          <ul className="mt-2 space-y-2">
-            {list.map((b) => (
-              <li key={b.id} className="rounded-md border p-3">
-                {b.name}
+          <ul className="mt-6 divide-y border-y">
+            {batchList.map((b) => (
+              <li key={b.id}>
+                <Link
+                  href={`/batches/${b.id}`}
+                  className="flex items-center justify-between gap-4 py-4 hover:text-foreground"
+                >
+                  <span className="font-display text-lg font-semibold">{b.name}</span>
+                  <span className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                    {b.cycle && <span>{b.cycle}</span>}
+                    <span aria-hidden>→</span>
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>
