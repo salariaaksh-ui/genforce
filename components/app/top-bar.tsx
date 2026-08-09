@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { exams } from "@/lib/db/schema"
 import { Logo } from "@/components/brand/logo"
 import { ExamSwitcher } from "./exam-switcher"
+import { ThemeToggle } from "./theme-toggle"
 
 export async function TopBar({
   userName,
@@ -21,6 +22,7 @@ export async function TopBar({
         </Link>
         <div className="flex items-center gap-3">
           <ExamSwitcher currentLabel={exam?.name ?? "Exam"} />
+          <ThemeToggle />
           <Link
             href="/profile"
             aria-label="Your profile"

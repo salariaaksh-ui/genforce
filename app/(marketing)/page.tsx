@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { auth } from "@/auth"
 import { GoogleButton } from "@/components/auth/google-button"
 import { Logo, LogoMark } from "@/components/brand/logo"
+import { ThemeToggle } from "@/components/app/theme-toggle"
 
 const STEPS = [
   {
@@ -46,12 +47,15 @@ export default async function Landing() {
       <header className="border-b">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <Logo />
-          <Link
-            href="/login"
-            className="font-mono text-xs uppercase tracking-widest text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-          >
-            Sign in
-          </Link>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <Link
+              href="/login"
+              className="font-mono text-xs uppercase tracking-widest text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              Sign in
+            </Link>
+          </div>
         </div>
       </header>
 

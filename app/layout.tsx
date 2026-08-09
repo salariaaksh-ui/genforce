@@ -46,9 +46,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${display.variable} ${body.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        {/* Set the theme class before paint so there's no light/dark flash.
+            Manual choice (localStorage) wins; first visit falls back to the OS. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()",
+          }}
+        />
         {/* Skip link — first tabbable element. Each page/route-group owns its
             own <main id="main-content"> landmark. */}
         <a
