@@ -7,8 +7,9 @@ export function needsOnboarding(user: { activeExamId: string | null }): boolean 
 
 export async function requireUser() {
   const { auth } = await import("@/auth")
-  const { redirect } = await import("next/navigation")
   const session = await auth()
-  if (!session?.user) redirect("/login")
-  return session.user
+  if (session?.user) return session.user
+  const { redirect } = await import("next/navigation")
+  redirect("/login")
+  throw new Error("unreachable") // redirect() throws; keeps the return type non-undefined
 }
