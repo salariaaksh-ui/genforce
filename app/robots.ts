@@ -5,13 +5,10 @@ import { siteConfig } from "@/lib/site"
 /**
  * robots.txt (served at /robots.txt).
  *
- * IMPORTANT (CLAUDE.md §6): do NOT block AI crawlers. The rule below allows
- * everything, which includes ClaudeBot, GPTBot, and PerplexityBot. If a client
- * ever needs to restrict paths, add Disallow entries to the "*" group — never
- * add a per-bot block for ClaudeBot / GPTBot / PerplexityBot. AI-referred
- * traffic is a high-converting channel for real estate.
- *
- * Do not ship a site-wide `noindex` — staging noindex must be removed at launch.
+ * Do NOT block AI crawlers (ClaudeBot, GPTBot, PerplexityBot) — the "*" allow
+ * covers them. Private/app routes are disallowed from indexing; never add a
+ * per-bot block for the AI crawlers. No site-wide `noindex` — remove any
+ * staging noindex at launch.
  */
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -19,7 +16,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // TODO(client): e.g. disallow: ["/api/"] if you add private routes.
+        disallow: ["/dashboard", "/onboarding", "/profile", "/api/"],
       },
     ],
     sitemap: `${siteConfig.url}/sitemap.xml`,

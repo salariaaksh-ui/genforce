@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/site"
 /** XML sitemap (served at /sitemap.xml). Public routes only. */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.url
-  const routes = ["", "/privacy", "/terms"]
+  const routes = ["", "/login", "/privacy", "/terms"]
   return routes.map((path) => ({
     url: `${base}${path}`,
     changeFrequency: path === "" ? "daily" : "monthly",
