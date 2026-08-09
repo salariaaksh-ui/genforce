@@ -10,18 +10,17 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <article className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
+    <main id="main-content" className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
       <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         TODO(client): replace with a real privacy policy reviewed for your
-        jurisdiction (e.g. Australian Privacy Principles). This placeholder is
-        not legal advice.
+        jurisdiction. This placeholder is not legal advice.
       </p>
       <div className="mt-6 space-y-4 text-pretty text-muted-foreground">
         <p>
-          {siteConfig.name} collects personal information you provide through
-          enquiry forms (such as your name, email, phone, and message) solely to
-          respond to your enquiry.
+          {siteConfig.name} collects the personal information you provide when
+          you sign in with Google (such as your name and email) and any details
+          you add to your profile, solely to operate your account.
         </p>
         <p>
           We do not sell your information. Describe here what you collect, how
@@ -38,6 +37,6 @@ export default function PrivacyPage() {
           </a>
         </p>
       </div>
-    </article>
+    </main>
   )
 }

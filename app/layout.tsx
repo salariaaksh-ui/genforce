@@ -3,8 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 
 import { siteConfig } from "@/lib/site"
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +15,6 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  // Makes canonical + Open Graph URLs resolve. TODO(client): set siteConfig.url.
   metadataBase: new URL(siteConfig.url),
   title: {
     default: `${siteConfig.name} — ${siteConfig.tagline}`,
@@ -45,19 +42,16 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
-        {/* Skip link — first tabbable element (WCAG / SKILL.md Phase 4) */}
+      <body className="min-h-full">
+        {/* Skip link — first tabbable element. Each page/route-group owns its
+            own <main id="main-content"> landmark. */}
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
         >
           Skip to content
         </a>
-        <SiteHeader />
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
-        <SiteFooter />
+        {children}
       </body>
     </html>
   )

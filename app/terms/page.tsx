@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <article className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
+    <main id="main-content" className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
       <h1 className="text-3xl font-bold tracking-tight">Terms of Use</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         TODO(client): replace with real terms reviewed for your jurisdiction.
@@ -19,14 +19,15 @@ export default function TermsPage() {
       <div className="mt-6 space-y-4 text-pretty text-muted-foreground">
         <p>
           The content on this website is provided for general information only.
-          Property details, prices, and availability may change without notice
-          and should be confirmed with {siteConfig.name} before acting on them.
+          Course details, schedules, and availability may change without notice.
+          Access to paid content is subject to an active subscription.
         </p>
         <p>
-          Describe here acceptable use, intellectual property, limitation of
-          liability, and the governing law for your jurisdiction.
+          Describe here acceptable use, intellectual property, subscription and
+          refund terms, limitation of liability, and the governing law for your
+          jurisdiction.
         </p>
       </div>
-    </article>
+    </main>
   )
 }
