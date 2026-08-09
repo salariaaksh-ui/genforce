@@ -1,11 +1,17 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Bricolage_Grotesque, Source_Serif_4, Geist_Mono } from "next/font/google"
 import "./globals.css"
 
 import { siteConfig } from "@/lib/site"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const display = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+})
+
+const body = Source_Serif_4({
+  variable: "--font-source-serif",
   subsets: ["latin"],
 })
 
@@ -40,7 +46,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         {/* Skip link — first tabbable element. Each page/route-group owns its
