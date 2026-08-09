@@ -14,27 +14,21 @@ export async function TopBar({
 }) {
   const exam = await db.query.exams.findFirst({ where: eq(exams.id, activeExamId) })
   return (
-    <header className="flex items-center justify-between border-b px-6 py-3">
-      <Link href="/dashboard" aria-label="Genforce home">
-        <Logo />
-      </Link>
-      <div className="flex items-center gap-3">
-        <ExamSwitcher currentLabel={exam?.name ?? "Exam"} />
-        <button
-          aria-label="Notifications"
-          className="rounded-md border px-2 py-1"
-          disabled
-          title="No notifications"
-        >
-          🔔
-        </button>
-        <Link
-          href="/profile"
-          aria-label="Account"
-          className="rounded-md border px-2 py-1 font-medium"
-        >
-          {userName[0]?.toUpperCase()}
+    <header className="border-b">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+        <Link href="/dashboard" aria-label="Genforce home">
+          <Logo />
         </Link>
+        <div className="flex items-center gap-3">
+          <ExamSwitcher currentLabel={exam?.name ?? "Exam"} />
+          <Link
+            href="/profile"
+            aria-label="Your profile"
+            className="flex size-8 items-center justify-center rounded-full border font-mono text-xs font-semibold uppercase hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            {userName[0]?.toUpperCase() ?? "U"}
+          </Link>
+        </div>
       </div>
     </header>
   )

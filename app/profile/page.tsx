@@ -1,9 +1,11 @@
+import Link from "next/link"
 import { eq } from "drizzle-orm"
 import { requireUser } from "@/lib/auth/guards"
 import { db } from "@/lib/db"
 import { users, plans, exams } from "@/lib/db/schema"
 import { updatePhone } from "@/app/actions/profile"
 import { signOut } from "@/auth"
+import { Breadcrumbs } from "@/components/app/breadcrumbs"
 
 export const metadata = { title: "Profile" }
 
@@ -15,49 +17,74 @@ export default async function Profile() {
     .from(plans)
     .innerJoin(exams, eq(plans.examId, exams.id))
     .where(eq(plans.userId, sessionUser.id))
+
   return (
-    <main id="main-content" className="mx-auto max-w-lg space-y-8 p-6">
+    <main id="main-content" className="mx-auto max-w-lg space-y-10 p-6 py-10">
+      <Breadcrumbs
+        items={[{ label: "Dashboard", href: "/dashboard" }, { label: "Profile" }]}
+      />
+
       <section>
-        <h1 className="text-2xl font-semibold">{row?.name}</h1>
-        <p className="text-muted-foreground">{row?.email}</p>
+        <h1 className="font-display text-3xl font-extrabold tracking-tight">
+          {row?.name ?? "Student"}
+        </h1>
+        <p className="mt-1 text-muted-foreground">{row?.email}</p>
       </section>
+
       <section>
-        <h2 className="font-semibold">Phone</h2>
-        <form action={updatePhone} className="mt-2 flex gap-2">
+        <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          Phone
+        </h2>
+        <form action={updatePhone} className="mt-3 flex gap-2">
           <input
             name="phone"
             defaultValue={row?.phone ?? ""}
             inputMode="numeric"
+            autoComplete="tel"
             placeholder="10-digit number"
-            className="rounded-md border px-3 py-2"
+            aria-label="Phone number"
+            className="flex-1 rounded-sm border bg-background px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
-          <button type="submit" className="rounded-md border px-4 py-2">
+          <button
+            type="submit"
+            className="rounded-sm bg-primary px-5 py-2 font-display text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
             Save
           </button>
         </form>
       </section>
+
       <section>
-        <h2 className="font-semibold">My plans</h2>
+        <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+          My plans
+        </h2>
         {myPlans.length === 0 ? (
-          <p className="text-muted-foreground">No active plans.</p>
+          <p className="mt-3 text-muted-foreground">No active plans.</p>
         ) : (
-          <ul className="mt-2 space-y-2">
+          <ul className="mt-3 divide-y border-y">
             {myPlans.map((p, i) => (
-              <li key={i} className="rounded-md border p-3">
-                {p.exam} — {p.status}
-                {p.expiresAt ? ` (expires ${p.expiresAt.toDateString()})` : ""}
+              <li key={i} className="flex items-center justify-between gap-4 py-3">
+                <span className="font-display font-semibold">{p.exam}</span>
+                <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {p.status}
+                  {p.expiresAt ? ` · expires ${p.expiresAt.toDateString()}` : ""}
+                </span>
               </li>
             ))}
           </ul>
         )}
       </section>
+
       <form
         action={async () => {
           "use server"
           await signOut({ redirectTo: "/" })
         }}
       >
-        <button type="submit" className="rounded-md border px-4 py-2">
+        <button
+          type="submit"
+          className="font-mono text-xs uppercase tracking-widest text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+        >
           Log out
         </button>
       </form>
