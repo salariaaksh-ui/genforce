@@ -18,7 +18,7 @@ export function GoogleButton({ tone = "default" }: { tone?: "default" | "onPrima
     >
       <button
         type="submit"
-        className={`inline-flex items-center gap-2.5 rounded-xl px-5 py-3 text-sm font-semibold transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${styles}`}
+        className={`inline-flex items-center gap-2.5 rounded-xl px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5 active:translate-y-0 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${styles}`}
       >
         <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
           <path
