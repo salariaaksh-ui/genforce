@@ -1,3 +1,4 @@
+import "dotenv/config" // load DATABASE_URL from .env for drizzle-kit generate/migrate
 import { defineConfig } from "drizzle-kit"
 
 export default defineConfig({

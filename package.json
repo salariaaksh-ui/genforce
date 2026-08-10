@@ -10,7 +10,8 @@
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed": "node --env-file=.env --import tsx lib/db/seed.ts"
+    "db:seed": "node --env-file=.env --import tsx lib/db/seed.ts",
+    "db:seed:demo": "node --env-file=.env --import tsx lib/db/seed-demo.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.3",
@@ -18,6 +19,7 @@
     "@hookform/resolvers": "^5.5.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^1.27.0",
