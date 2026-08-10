@@ -1,5 +1,8 @@
+import { FileText } from "lucide-react"
 import { requireActiveExam, listPdfs } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
+import { Reveal } from "@/components/motion/reveal"
+import { EmptyState } from "@/components/app/empty-state"
 
 export const metadata = { title: "PDFs" }
 
@@ -12,10 +15,16 @@ export default async function PdfsPage() {
       <Breadcrumbs
         items={[{ label: "Dashboard", href: "/dashboard" }, { label: "PDFs" }]}
       />
-      <h1 className="font-display text-3xl font-extrabold tracking-tight">Study PDFs</h1>
+      <Reveal onMount>
+        <h1 className="text-3xl font-extrabold tracking-tight">Study PDFs</h1>
+      </Reveal>
 
       {files.length === 0 ? (
-        <p className="text-muted-foreground">No PDFs uploaded yet.</p>
+        <EmptyState
+          icon={<FileText className="size-5" />}
+          title="No PDFs uploaded yet"
+          hint="Notes and papers for your exam will show up here."
+        />
       ) : (
         <ul className="divide-y overflow-hidden rounded-2xl border">
           {files.map((f) => (

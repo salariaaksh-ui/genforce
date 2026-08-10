@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { requireActiveExam, getLesson } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { LessonPlayer } from "@/components/app/lesson-player"
+import { Reveal } from "@/components/motion/reveal"
 
 export default async function LessonPage({
   params,
@@ -24,23 +25,27 @@ export default async function LessonPage({
           { label: `Lesson ${lesson.idx}` },
         ]}
       />
-      <div>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          {lesson.title}
-        </h1>
-        <p className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          {subject.name}
-          {lesson.recordedOn ? ` · ${lesson.recordedOn}` : ""}
-        </p>
-      </div>
-
-      {lesson.playUrl ? (
-        <LessonPlayer src={lesson.playUrl} title={lesson.title} />
-      ) : (
-        <div className="flex aspect-video w-full items-center justify-center rounded-2xl border bg-muted text-muted-foreground">
-          Video not available yet.
+      <Reveal onMount>
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+            {lesson.title}
+          </h1>
+          <p className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {subject.name}
+            {lesson.recordedOn ? ` · ${lesson.recordedOn}` : ""}
+          </p>
         </div>
-      )}
+      </Reveal>
+
+      <Reveal onMount delay={0.1}>
+        {lesson.playUrl ? (
+          <LessonPlayer src={lesson.playUrl} title={lesson.title} />
+        ) : (
+          <div className="flex aspect-video w-full items-center justify-center rounded-2xl border bg-muted text-muted-foreground">
+            Video not available yet.
+          </div>
+        )}
+      </Reveal>
     </div>
   )
 }

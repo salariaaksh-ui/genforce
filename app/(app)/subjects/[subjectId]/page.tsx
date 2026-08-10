@@ -1,7 +1,10 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { PlayCircle } from "lucide-react"
 import { requireActiveExam, getSubject, listLessons } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
+import { Reveal } from "@/components/motion/reveal"
+import { EmptyState } from "@/components/app/empty-state"
 
 function fmtDuration(sec: number | null) {
   if (!sec) return null
@@ -29,24 +32,30 @@ export default async function SubjectPage({
           { label: subject.name },
         ]}
       />
-      <div>
-        <h1 className="font-display text-3xl font-extrabold tracking-tight">{subject.name}</h1>
-        {subject.teacher && (
-          <p className="mt-1 text-muted-foreground">with {subject.teacher}</p>
-        )}
-      </div>
+      <Reveal onMount>
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight">{subject.name}</h1>
+          {subject.teacher && (
+            <p className="mt-1 text-muted-foreground">with {subject.teacher}</p>
+          )}
+        </div>
+      </Reveal>
 
       {lessonList.length === 0 ? (
-        <p className="text-muted-foreground">No lessons published yet.</p>
+        <EmptyState
+          icon={<PlayCircle className="size-5" />}
+          title="No lessons published yet"
+          hint="Recorded classes for this subject will appear here."
+        />
       ) : (
         <ol className="divide-y overflow-hidden rounded-2xl border">
           {lessonList.map((l) => (
             <li key={l.id}>
               <Link
                 href={`/lessons/${l.id}`}
-                className="flex items-center gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent"
+                className="group flex items-center gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent"
               >
-                <span className="grid size-8 flex-none place-items-center rounded-full bg-secondary font-mono text-xs tabular-nums text-secondary-foreground">
+                <span className="grid size-8 flex-none place-items-center rounded-full bg-secondary font-mono text-xs tabular-nums text-secondary-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                   {String(l.idx).padStart(2, "0")}
                 </span>
                 <span className="flex-1 font-semibold">{l.title}</span>
@@ -55,7 +64,7 @@ export default async function SubjectPage({
                     {fmtDuration(l.durationSec)}
                   </span>
                 )}
-                <span aria-hidden className="text-primary">→</span>
+                <span aria-hidden className="text-primary transition-transform group-hover:translate-x-0.5">→</span>
               </Link>
             </li>
           ))}

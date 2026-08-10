@@ -1,7 +1,10 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { BookOpen } from "lucide-react"
 import { requireActiveExam, getBatch, listSubjects } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
+import { Reveal } from "@/components/motion/reveal"
+import { EmptyState } from "@/components/app/empty-state"
 
 export default async function BatchPage({
   params,
@@ -19,33 +22,40 @@ export default async function BatchPage({
       <Breadcrumbs
         items={[{ label: "Dashboard", href: "/dashboard" }, { label: batch.name }]}
       />
-      <div>
-        <h1 className="font-display text-3xl font-extrabold tracking-tight">{batch.name}</h1>
-        {batch.cycle && (
-          <p className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            {batch.cycle}
-          </p>
-        )}
-      </div>
+      <Reveal onMount>
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight">{batch.name}</h1>
+          {batch.cycle && (
+            <p className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              {batch.cycle}
+            </p>
+          )}
+        </div>
+      </Reveal>
 
       {subjectList.length === 0 ? (
-        <p className="text-muted-foreground">No subjects in this batch yet.</p>
+        <EmptyState
+          icon={<BookOpen className="size-5" />}
+          title="No subjects yet"
+          hint="Subjects appear here once they're added to this batch."
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
-          {subjectList.map((s) => (
-            <Link
-              key={s.id}
-              href={`/subjects/${s.id}`}
-              className="group rounded-2xl border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40"
-            >
-              <p className="text-xl font-semibold">{s.name}</p>
-              {s.teacher && (
-                <p className="mt-1 text-sm text-muted-foreground">with {s.teacher}</p>
-              )}
-              <span className="mt-6 block font-mono text-xs uppercase tracking-widest text-primary">
-                View lessons →
-              </span>
-            </Link>
+          {subjectList.map((s, i) => (
+            <Reveal key={s.id} delay={i * 0.05}>
+              <Link
+                href={`/subjects/${s.id}`}
+                className="group block rounded-2xl border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40"
+              >
+                <p className="text-xl font-semibold">{s.name}</p>
+                {s.teacher && (
+                  <p className="mt-1 text-sm text-muted-foreground">with {s.teacher}</p>
+                )}
+                <span className="mt-6 block font-mono text-xs uppercase tracking-widest text-primary">
+                  View lessons →
+                </span>
+              </Link>
+            </Reveal>
           ))}
         </div>
       )}

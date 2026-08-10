@@ -1,5 +1,8 @@
+import { ClipboardList } from "lucide-react"
 import { requireActiveExam, listTests } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
+import { Reveal } from "@/components/motion/reveal"
+import { EmptyState } from "@/components/app/empty-state"
 
 export const metadata = { title: "Tests" }
 
@@ -12,16 +15,22 @@ export default async function TestsPage() {
       <Breadcrumbs
         items={[{ label: "Dashboard", href: "/dashboard" }, { label: "Tests" }]}
       />
-      <h1 className="font-display text-3xl font-extrabold tracking-tight">Practice tests</h1>
+      <Reveal onMount>
+        <h1 className="text-3xl font-extrabold tracking-tight">Practice tests</h1>
+      </Reveal>
 
       {forms.length === 0 ? (
-        <p className="text-muted-foreground">No tests available yet.</p>
+        <EmptyState
+          icon={<ClipboardList className="size-5" />}
+          title="No tests available yet"
+          hint="Timed practice papers will appear here when released."
+        />
       ) : (
-        <ul className="grid gap-4 sm:grid-cols-2">
-          {forms.map((t) => (
-            <li
-              key={t.id}
-              className="flex items-center justify-between gap-4 rounded-2xl border bg-card p-5"
+        <div className="grid gap-4 sm:grid-cols-2">
+          {forms.map((t, i) => (
+            <Reveal key={t.id} delay={i * 0.05} className="h-full">
+            <div
+              className="flex h-full items-center justify-between gap-4 rounded-2xl border bg-card p-5"
             >
               <div>
                 <p className="font-semibold">{t.setName ?? "Practice set"}</p>
@@ -35,13 +44,14 @@ export default async function TestsPage() {
                 href={t.formUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-none rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="flex-none rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5 active:translate-y-0 active:scale-[.98] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Start →
               </a>
-            </li>
+            </div>
+            </Reveal>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   )
