@@ -37,7 +37,7 @@ export default async function LessonPage({
       {lesson.playUrl ? (
         <LessonPlayer src={lesson.playUrl} title={lesson.title} />
       ) : (
-        <div className="flex aspect-video w-full items-center justify-center rounded-sm border bg-muted text-muted-foreground">
+        <div className="flex aspect-video w-full items-center justify-center rounded-2xl border bg-muted text-muted-foreground">
           Video not available yet.
         </div>
       )}

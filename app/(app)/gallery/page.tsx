@@ -21,7 +21,7 @@ export default async function GalleryPage() {
           {imgs.map((img) => (
             <div
               key={img.id}
-              className="relative aspect-square overflow-hidden rounded-sm border"
+              className="relative aspect-square overflow-hidden rounded-2xl border"
             >
               {/* ponytail: plain <img> because the image host is client-provided
                   and unknown until content lands. Switch to next/image once the

@@ -23,17 +23,17 @@ export function ExamSwitcher({ currentLabel }: { currentLabel: string }) {
         onClick={(e) => {
           if (e.target === ref.current) ref.current?.close()
         }}
-        className="m-auto w-full max-w-sm border bg-background p-6 backdrop:bg-foreground/40"
+        className="m-auto w-full max-w-sm rounded-2xl border bg-popover p-6 text-popover-foreground backdrop:bg-foreground/50"
       >
         <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Change your exam
         </h2>
-        <div className="mt-6 grid grid-cols-2 gap-px border bg-border">
+        <div className="mt-6 grid grid-cols-2 gap-3">
           {EXAM_SLUGS.map((slug) => (
             <form key={slug} action={selectExam.bind(null, slug)}>
               <button
                 type="submit"
-                className="w-full bg-background p-4 font-display font-semibold transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                className="w-full rounded-xl border bg-card p-4 font-semibold transition-colors hover:border-primary/40 hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {EXAM_LABEL[slug]}
               </button>

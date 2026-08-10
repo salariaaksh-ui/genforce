@@ -1,23 +1,20 @@
 import type { Metadata } from "next"
-import { Bricolage_Grotesque, Source_Serif_4, Geist_Mono } from "next/font/google"
+import { Sora, Chakra_Petch } from "next/font/google"
 import "./globals.css"
 
 import { siteConfig } from "@/lib/site"
 
-const display = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+// Sora carries display + body; Chakra Petch is the tactical label face.
+const sora = Sora({
+  variable: "--font-sora",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
 })
 
-const body = Source_Serif_4({
-  variable: "--font-source-serif",
+const chakra = Chakra_Petch({
+  variable: "--font-chakra",
   subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["500", "600", "700"],
 })
 
 export const metadata: Metadata = {
@@ -47,15 +44,15 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${display.variable} ${body.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${sora.variable} ${chakra.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         {/* Set the theme class before paint so there's no light/dark flash.
-            Manual choice (localStorage) wins; first visit falls back to the OS. */}
+            Dark is the default Genforce look; a stored 'light' choice opts out. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()",
+              "(function(){try{if(localStorage.getItem('theme')!=='light'){document.documentElement.classList.add('dark')}}catch(e){document.documentElement.classList.add('dark')}})()",
           }}
         />
         {/* Skip link — first tabbable element. Each page/route-group owns its

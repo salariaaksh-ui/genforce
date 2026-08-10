@@ -17,17 +17,17 @@ export default async function PdfsPage() {
       {files.length === 0 ? (
         <p className="text-muted-foreground">No PDFs uploaded yet.</p>
       ) : (
-        <ul className="divide-y border-y">
+        <ul className="divide-y overflow-hidden rounded-2xl border">
           {files.map((f) => (
             <li key={f.id}>
               <a
                 href={f.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between gap-4 py-4 hover:text-foreground"
+                className="flex items-center justify-between gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent"
               >
-                <span className="font-display font-medium">{f.filename}</span>
-                <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                <span className="font-medium">{f.filename}</span>
+                <span className="font-mono text-xs uppercase tracking-widest text-primary">
                   Download ↓
                 </span>
               </a>

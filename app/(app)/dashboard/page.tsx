@@ -19,16 +19,16 @@ export default async function Dashboard() {
         <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Study material
         </h2>
-        <div className="mt-6 grid gap-px border bg-border sm:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {RESOURCES.map((r) => (
             <Link
               key={r.href}
               href={r.href}
-              className="group bg-background p-6 transition-colors hover:bg-accent"
+              className="group rounded-2xl border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40"
             >
-              <p className="font-display text-xl font-semibold">{r.label}</p>
+              <p className="text-xl font-semibold">{r.label}</p>
               <p className="mt-1 text-sm text-muted-foreground">{r.desc}</p>
-              <span className="mt-4 block font-mono text-xs uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
+              <span className="mt-6 block font-mono text-xs uppercase tracking-widest text-primary">
                 Open →
               </span>
             </Link>
@@ -45,22 +45,21 @@ export default async function Dashboard() {
             No batches yet. Check back once your batch is published.
           </p>
         ) : (
-          <ul className="mt-6 divide-y border-y">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {batchList.map((b) => (
-              <li key={b.id}>
-                <Link
-                  href={`/batches/${b.id}`}
-                  className="flex items-center justify-between gap-4 py-4 hover:text-foreground"
-                >
-                  <span className="font-display text-lg font-semibold">{b.name}</span>
-                  <span className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                    {b.cycle && <span>{b.cycle}</span>}
-                    <span aria-hidden>→</span>
-                  </span>
-                </Link>
-              </li>
+              <Link
+                key={b.id}
+                href={`/batches/${b.id}`}
+                className="group flex items-center justify-between gap-4 rounded-2xl border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40"
+              >
+                <span className="text-lg font-semibold">{b.name}</span>
+                <span className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {b.cycle && <span>{b.cycle}</span>}
+                  <span aria-hidden className="text-primary">→</span>
+                </span>
+              </Link>
             ))}
-          </ul>
+          </div>
         )}
       </section>
     </div>

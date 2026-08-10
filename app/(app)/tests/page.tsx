@@ -17,12 +17,15 @@ export default async function TestsPage() {
       {forms.length === 0 ? (
         <p className="text-muted-foreground">No tests available yet.</p>
       ) : (
-        <ul className="divide-y border-y">
+        <ul className="grid gap-4 sm:grid-cols-2">
           {forms.map((t) => (
-            <li key={t.id} className="flex items-center justify-between gap-4 py-4">
+            <li
+              key={t.id}
+              className="flex items-center justify-between gap-4 rounded-2xl border bg-card p-5"
+            >
               <div>
-                <p className="font-display font-semibold">{t.setName ?? "Practice set"}</p>
-                <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                <p className="font-semibold">{t.setName ?? "Practice set"}</p>
+                <p className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
                   {[t.timeLimitMin ? `${t.timeLimitMin} min` : null, t.formDate]
                     .filter(Boolean)
                     .join(" · ")}
@@ -32,7 +35,7 @@ export default async function TestsPage() {
                 href={t.formUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-sm bg-primary px-4 py-2 font-display text-sm font-semibold text-primary-foreground hover:opacity-90"
+                className="flex-none rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Start →
               </a>

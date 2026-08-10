@@ -39,25 +39,23 @@ export default async function SubjectPage({
       {lessonList.length === 0 ? (
         <p className="text-muted-foreground">No lessons published yet.</p>
       ) : (
-        <ol className="divide-y border-y">
+        <ol className="divide-y overflow-hidden rounded-2xl border">
           {lessonList.map((l) => (
             <li key={l.id}>
               <Link
                 href={`/lessons/${l.id}`}
-                className="flex items-center gap-4 py-4 hover:text-foreground"
+                className="flex items-center gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent"
               >
-                <span className="font-mono text-sm tabular-nums text-muted-foreground">
+                <span className="grid size-8 flex-none place-items-center rounded-full bg-secondary font-mono text-xs tabular-nums text-secondary-foreground">
                   {String(l.idx).padStart(2, "0")}
                 </span>
-                <span className="flex-1 font-display font-semibold">{l.title}</span>
+                <span className="flex-1 font-semibold">{l.title}</span>
                 {fmtDuration(l.durationSec) && (
                   <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
                     {fmtDuration(l.durationSec)}
                   </span>
                 )}
-                <span aria-hidden className="text-foreground/30">
-                  →
-                </span>
+                <span aria-hidden className="text-primary">→</span>
               </Link>
             </li>
           ))}

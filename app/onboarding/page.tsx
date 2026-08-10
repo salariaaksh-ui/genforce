@@ -30,14 +30,14 @@ export default async function Onboarding() {
           Your dashboard reshapes around it. You can switch anytime from the top bar.
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-px border bg-border">
+      <div className="grid grid-cols-2 gap-4">
         {EXAM_SLUGS.map((slug) => (
           <form key={slug} action={selectExam.bind(null, slug)}>
             <button
               type="submit"
-              className="w-full bg-background p-6 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+              className="w-full rounded-2xl border bg-card p-6 text-left transition hover:-translate-y-0.5 hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <span className="font-display text-2xl font-extrabold tracking-tight">
+              <span className="text-2xl font-extrabold tracking-tight">
                 {EXAM_LABEL[slug]}
               </span>
             </button>

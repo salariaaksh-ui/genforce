@@ -31,18 +31,18 @@ export default async function BatchPage({
       {subjectList.length === 0 ? (
         <p className="text-muted-foreground">No subjects in this batch yet.</p>
       ) : (
-        <div className="grid gap-px border bg-border sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {subjectList.map((s) => (
             <Link
               key={s.id}
               href={`/subjects/${s.id}`}
-              className="group bg-background p-6 transition-colors hover:bg-accent"
+              className="group rounded-2xl border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40"
             >
-              <p className="font-display text-xl font-semibold">{s.name}</p>
+              <p className="text-xl font-semibold">{s.name}</p>
               {s.teacher && (
                 <p className="mt-1 text-sm text-muted-foreground">with {s.teacher}</p>
               )}
-              <span className="mt-4 block font-mono text-xs uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
+              <span className="mt-6 block font-mono text-xs uppercase tracking-widest text-primary">
                 View lessons →
               </span>
             </Link>

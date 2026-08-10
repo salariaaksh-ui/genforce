@@ -43,11 +43,11 @@ export default async function Profile() {
             autoComplete="tel"
             placeholder="10-digit number"
             aria-label="Phone number"
-            className="flex-1 rounded-sm border bg-background px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex-1 rounded-xl border bg-card px-4 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
           <button
             type="submit"
-            className="rounded-sm bg-primary px-5 py-2 font-display text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Save
           </button>
@@ -61,10 +61,10 @@ export default async function Profile() {
         {myPlans.length === 0 ? (
           <p className="mt-3 text-muted-foreground">No active plans.</p>
         ) : (
-          <ul className="mt-3 divide-y border-y">
+          <ul className="mt-3 divide-y overflow-hidden rounded-2xl border">
             {myPlans.map((p, i) => (
-              <li key={i} className="flex items-center justify-between gap-4 py-3">
-                <span className="font-display font-semibold">{p.exam}</span>
+              <li key={i} className="flex items-center justify-between gap-4 bg-card px-5 py-3">
+                <span className="font-semibold">{p.exam}</span>
                 <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
                   {p.status}
                   {p.expiresAt ? ` · expires ${p.expiresAt.toDateString()}` : ""}

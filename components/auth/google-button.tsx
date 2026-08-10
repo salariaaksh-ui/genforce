@@ -1,6 +1,14 @@
 import { signIn } from "@/auth"
 
-export function GoogleButton() {
+/**
+ * Google sign-in. `tone="onPrimary"` flips to a light fill for use on top of a
+ * primary-colored panel (where the default violet-on-violet would vanish).
+ */
+export function GoogleButton({ tone = "default" }: { tone?: "default" | "onPrimary" }) {
+  const styles =
+    tone === "onPrimary"
+      ? "bg-background text-foreground hover:opacity-90"
+      : "bg-primary text-primary-foreground hover:opacity-90"
   return (
     <form
       action={async () => {
@@ -10,7 +18,7 @@ export function GoogleButton() {
     >
       <button
         type="submit"
-        className="inline-flex items-center gap-2.5 rounded-sm bg-primary px-5 py-2.5 font-display text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className={`inline-flex items-center gap-2.5 rounded-xl px-5 py-3 text-sm font-semibold transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${styles}`}
       >
         <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
           <path

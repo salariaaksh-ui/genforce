@@ -7,12 +7,14 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Inverted pairing: characterful sans display over a serif reading body. */
-  --font-sans: var(--font-source-serif); /* body/default = serif */
-  --font-display: var(--font-bricolage); /* headings = grotesque */
-  --font-mono: var(--font-geist-mono); /* data, labels, tick numerals */
+  /* Sora carries both display and body; Chakra Petch is the tactical label face
+     (eyebrows, meta, numerals) and is wired to the `font-mono` utility. */
+  --font-sans: var(--font-sora);
+  --font-display: var(--font-sora);
+  --font-mono: var(--font-chakra);
   --font-heading: var(--font-display);
-  /* The single electric signal — used as a highlighter, never a fill palette. */
+  /* The single highlight accent — orange (dark) / amber (light). Used as an
+     underline swash or a small chip, never a page-wide fill. */
   --color-signal: var(--signal);
   --color-signal-foreground: var(--signal-foreground);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -44,97 +46,98 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.7);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
   --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-3xl: calc(var(--radius) * 2.4);
+  --radius-4xl: calc(var(--radius) * 3);
 }
 
 /*
- * ── BRAND TOKENS — swap these per client ──────────────────────────────────
- * Restyle the whole site by editing the values below. The one accent/brand
- * colour lives in --primary (reserved for CTAs/links per CLAUDE.md §4); --ring
- * is the focus colour. Keep AA contrast: --primary vs --primary-foreground and
- * --background vs --foreground must both clear 4.5:1. Defaults are a neutral
- * greyscale so the template ships brand-free.
+ * ── BRAND TOKENS — Genforce ───────────────────────────────────────────────
+ * DNA: a confident dark indigo-navy (the default brand look) with a violet
+ * primary and one warm orange highlight. The light theme (:root) is an airy
+ * off-white variant used when the student toggles light. Restyle the whole
+ * site by editing the values below; keep --primary vs --primary-foreground and
+ * --background vs --foreground both ≥ 4.5:1.
  * ──────────────────────────────────────────────────────────────────────────
  */
+
+/* LIGHT — airy off-white variant */
 :root {
-  /* Genforce DNA — warm monochrome (bone + graphite) with one electric signal
-     (lime), used only as a highlighter. Flat: separation is 1px hairlines. */
-  --background: oklch(0.965 0.006 85); /* bone */
-  --foreground: oklch(0.235 0.01 65); /* graphite */
-  --card: oklch(0.982 0.005 85);
-  --card-foreground: oklch(0.235 0.01 65);
-  --popover: oklch(0.982 0.005 85);
-  --popover-foreground: oklch(0.235 0.01 65);
-  --primary: oklch(0.235 0.01 65); /* graphite ink — the CTA fill */
-  --primary-foreground: oklch(0.97 0.006 85);
-  --secondary: oklch(0.93 0.008 85);
-  --secondary-foreground: oklch(0.235 0.01 65);
-  --muted: oklch(0.93 0.006 85);
-  --muted-foreground: oklch(0.475 0.012 70); /* AA on bone */
-  --accent: oklch(0.925 0.01 85); /* quiet warm hover, not lime */
-  --accent-foreground: oklch(0.235 0.01 65);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.235 0.01 65 / 0.16); /* graphite hairline */
-  --input: oklch(0.235 0.01 65 / 0.22);
-  --ring: oklch(0.235 0.01 65); /* high-contrast focus */
-  --signal: oklch(0.885 0.18 108); /* lime highlighter */
-  --signal-foreground: oklch(0.235 0.01 65);
-  --chart-1: oklch(0.885 0.18 108);
-  --chart-2: oklch(0.235 0.01 65);
-  --chart-3: oklch(0.475 0.012 70);
-  --chart-4: oklch(0.7 0.09 100);
-  --chart-5: oklch(0.35 0.01 65);
-  --radius: 0.2rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #fbfcff;
+  --foreground: #33355a;
+  --card: #ffffff;
+  --card-foreground: #33355a;
+  --popover: #ffffff;
+  --popover-foreground: #33355a;
+  --primary: #6360e6; /* indigo CTA */
+  --primary-foreground: #ffffff;
+  --secondary: #eef0ff;
+  --secondary-foreground: #33355a;
+  --muted: #eef0f7;
+  --muted-foreground: #64678a; /* AA on off-white */
+  --accent: #eef0ff; /* quiet hover tint */
+  --accent-foreground: #33355a;
+  --destructive: #dc2626;
+  --border: #e7e9f2;
+  --input: #d9dcec;
+  --ring: #6360e6;
+  --signal: #f7b64b; /* amber highlight */
+  --signal-foreground: #201a12;
+  --chart-1: #6360e6;
+  --chart-2: #f7994b;
+  --chart-3: #33355a;
+  --chart-4: #22c3a6;
+  --chart-5: #9a9ec2;
+  --radius: 0.9rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #33355a;
+  --sidebar-primary: #6360e6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef0ff;
+  --sidebar-accent-foreground: #33355a;
+  --sidebar-border: #e7e9f2;
+  --sidebar-ring: #6360e6;
 }
 
+/* DARK — the default Genforce brand look */
 .dark {
-  --background: oklch(0.235 0.01 65); /* graphite */
-  --foreground: oklch(0.955 0.006 85); /* bone */
-  --card: oklch(0.275 0.01 65);
-  --card-foreground: oklch(0.955 0.006 85);
-  --popover: oklch(0.275 0.01 65);
-  --popover-foreground: oklch(0.955 0.006 85);
-  --primary: oklch(0.955 0.006 85);
-  --primary-foreground: oklch(0.235 0.01 65);
-  --secondary: oklch(0.32 0.01 65);
-  --secondary-foreground: oklch(0.955 0.006 85);
-  --muted: oklch(0.32 0.01 65);
-  --muted-foreground: oklch(0.72 0.01 80);
-  --accent: oklch(0.34 0.01 65);
-  --accent-foreground: oklch(0.955 0.006 85);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.955 0.006 85 / 0.14);
-  --input: oklch(0.955 0.006 85 / 0.2);
-  --ring: oklch(0.885 0.18 108);
-  --signal: oklch(0.885 0.18 108);
-  --signal-foreground: oklch(0.235 0.01 65);
-  --chart-1: oklch(0.885 0.18 108);
-  --chart-2: oklch(0.955 0.006 85);
-  --chart-3: oklch(0.72 0.01 80);
-  --chart-4: oklch(0.7 0.09 100);
-  --chart-5: oklch(0.6 0.01 65);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #101326;
+  --foreground: #eef0fb;
+  --card: #171b31;
+  --card-foreground: #eef0fb;
+  --popover: #171b31;
+  --popover-foreground: #eef0fb;
+  --primary: #5b4fe0; /* violet CTA — deepened so white text clears AA (4.5:1) */
+  --primary-foreground: #ffffff;
+  --secondary: #1d2140;
+  --secondary-foreground: #eef0fb;
+  --muted: #1d2140;
+  --muted-foreground: #9a9ec2; /* AA on navy */
+  --accent: #21264a;
+  --accent-foreground: #eef0fb;
+  --destructive: #f87171;
+  --border: #262b47;
+  --input: #333a5c;
+  --ring: #8b87ff;
+  --signal: #f7994b; /* orange highlight */
+  --signal-foreground: #201a12;
+  --chart-1: #8b87ff;
+  --chart-2: #f7994b;
+  --chart-3: #eef0fb;
+  --chart-4: #22d3a7;
+  --chart-5: #9a9ec2;
+  --sidebar: #171b31;
+  --sidebar-foreground: #eef0fb;
+  --sidebar-primary: #6c63ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #21264a;
+  --sidebar-accent-foreground: #eef0fb;
+  --sidebar-border: #262b47;
+  --sidebar-ring: #8b87ff;
 }
 
 @layer base {
@@ -143,23 +146,30 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "ss01";
   }
   html {
-    @apply font-sans; /* serif reading body */
+    @apply font-sans;
   }
   h1,
   h2,
   h3,
   h4 {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
-  /* Lime signal shows up when the reader highlights — a quiet piece of the DNA. */
+  /* The highlight shows up on text selection too — a quiet piece of the DNA. */
   ::selection {
     background: var(--signal);
     color: var(--signal-foreground);
+  }
+}
+
+/* Highlight swash: underline a word with the accent (used on hero headlines). */
+@layer components {
+  .swash {
+    text-decoration: none;
+    box-shadow: inset 0 -0.14em 0 var(--signal);
   }
 }
