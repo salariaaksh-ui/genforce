@@ -30,6 +30,7 @@ for (const slug of EXAM_SLUGS) {
 }
 const afcat = (await db.query.exams.findFirst({ where: eq(s.exams.slug, "afcat") }))!
 const nda = (await db.query.exams.findFirst({ where: eq(s.exams.slug, "nda") }))!
+const capf = (await db.query.exams.findFirst({ where: eq(s.exams.slug, "capf") }))!
 
 // Demo content for AFCAT only — so NDA verifies the empty states (day-one UX).
 const hasBatch = await db.query.batches.findFirst({ where: eq(s.batches.examId, afcat.id) })
@@ -73,6 +74,7 @@ async function ensureSession(email: string, name: string, examId: string, token:
 }
 await ensureSession("dev-afcat@example.com", "Dev Student (AFCAT)", afcat.id, "dev-session-afcat")
 await ensureSession("dev-nda@example.com", "Dev Student (NDA)", nda.id, "dev-session-nda")
+await ensureSession("dev-capf@example.com", "Dev Student (CAPF)", capf.id, "dev-session-capf")
 
 // A user with NO active exam, to reach /onboarding (dev-session-onboard).
 {

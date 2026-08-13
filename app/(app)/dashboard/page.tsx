@@ -3,6 +3,7 @@ import { Layers } from "lucide-react"
 import { requireActiveExam, listBatches } from "@/lib/db/queries"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
+import { CourseCard } from "@/components/app/course-card"
 
 export const metadata = { title: "Dashboard" }
 
@@ -46,7 +47,7 @@ export default async function Dashboard() {
       <section>
         <Reveal>
           <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Batches
+            Available batches
           </h2>
         </Reveal>
         {batchList.length === 0 ? (
@@ -58,19 +59,15 @@ export default async function Dashboard() {
             />
           </div>
         ) : (
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {batchList.map((b, i) => (
               <Reveal key={b.id} delay={i * 0.05}>
-                <Link
+                <CourseCard
                   href={`/batches/${b.id}`}
-                  className="group flex items-center justify-between gap-4 rounded-2xl border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40"
-                >
-                  <span className="text-lg font-semibold">{b.name}</span>
-                  <span className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                    {b.cycle && <span>{b.cycle}</span>}
-                    <span aria-hidden className="text-primary transition-transform group-hover:translate-x-0.5">→</span>
-                  </span>
-                </Link>
+                  name={b.name}
+                  cycle={b.cycle}
+                  thumbnail={b.thumbnail}
+                />
               </Reveal>
             ))}
           </div>

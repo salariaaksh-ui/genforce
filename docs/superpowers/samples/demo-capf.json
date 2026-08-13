@@ -1,0 +1,35 @@
+{
+  "exam": "capf",
+  "batches": [
+    {
+      "name": "India Batch (Paper 1 + Paper 2) CAPF 2027",
+      "cycle": "CAPF 2027",
+      "thumbnail": "/courses/india.webp",
+      "priceInr": 7999,
+      "subjects": [
+        {
+          "name": "General Studies",
+          "teacher": "GENFORCE Faculty",
+          "lessons": [
+            { "idx": 1, "title": "Polity Class 1", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Game Changer Foundation Program 2027",
+      "cycle": "CAPF 2027",
+      "thumbnail": "/courses/game-changer.webp",
+      "priceInr": 9999,
+      "subjects": [
+        {
+          "name": "Paper 1 Complete Solution",
+          "teacher": "GENFORCE Faculty",
+          "lessons": [
+            { "idx": 1, "title": "Foundation Class 1", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871" }
+          ]
+        }
+      ]
+    }
+  ]
+}

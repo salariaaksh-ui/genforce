@@ -47,3 +47,4 @@ next-env.d.ts
 # verification screenshots (local evidence, not source)
 docs/verify/*.png
 docs/verify/*.jpg
+docs/verify/*.jpeg

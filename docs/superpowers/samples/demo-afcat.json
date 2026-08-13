@@ -1,0 +1,27 @@
+{
+  "exam": "afcat",
+  "batches": [
+    {
+      "name": "Juliet Batch (AFCAT 1 2027)",
+      "cycle": "AFCAT 1 2027",
+      "thumbnail": "/courses/juliet.webp",
+      "priceInr": 2540,
+      "subjects": [
+        {
+          "name": "Maths",
+          "teacher": "Ashish Garg",
+          "lessons": [
+            { "idx": 1, "title": "Percentage Class 1", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871", "durationSec": 1830 }
+          ]
+        },
+        {
+          "name": "Reasoning",
+          "teacher": "Anurag Tripathi",
+          "lessons": [
+            { "idx": 1, "title": "Coding Decoding", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871" }
+          ]
+        }
+      ]
+    }
+  ]
+}

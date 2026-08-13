@@ -1,10 +1,10 @@
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import { BookOpen } from "lucide-react"
 import { requireActiveExam, getBatch, listSubjects } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
+import { SubjectCard } from "@/components/app/subject-card"
 
 export async function generateMetadata({
   params,
@@ -51,21 +51,15 @@ export default async function BatchPage({
           hint="Subjects appear here once they're added to this batch."
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {subjectList.map((s, i) => (
             <Reveal key={s.id} delay={i * 0.05}>
-              <Link
+              <SubjectCard
                 href={`/subjects/${s.id}`}
-                className="group block rounded-2xl border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40"
-              >
-                <p className="text-xl font-semibold">{s.name}</p>
-                {s.teacher && (
-                  <p className="mt-1 text-sm text-muted-foreground">with {s.teacher}</p>
-                )}
-                <span className="mt-6 block font-mono text-xs uppercase tracking-widest text-primary">
-                  View lessons →
-                </span>
-              </Link>
+                name={s.name}
+                teacher={s.teacher}
+                coverImage={s.coverImage}
+              />
             </Reveal>
           ))}
         </div>
