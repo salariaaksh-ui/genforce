@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { PlayCircle } from "lucide-react"
-import { requireActiveExam, getSubject, listLessons } from "@/lib/db/queries"
+import { requireActiveExam, getSubject, listLessons, assertBatchUnlocked } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
@@ -28,10 +28,11 @@ export default async function SubjectPage({
   params: Promise<{ subjectId: string }>
 }) {
   const { subjectId } = await params
-  const { examId } = await requireActiveExam()
+  const { user, examId } = await requireActiveExam()
   const found = await getSubject(subjectId, examId)
   if (!found) notFound()
   const { subject, batch } = found
+  await assertBatchUnlocked(batch, user.id)
   const lessonList = await listLessons(subject.id)
 
   return (

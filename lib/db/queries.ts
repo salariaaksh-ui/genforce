@@ -10,16 +10,15 @@ import {
   pdfs,
   galleryImages,
   testForms,
+  entitlements,
 } from "./schema"
 import { requireUser } from "@/lib/auth/guards"
+import { isPaid, isLive } from "@/lib/payments/gate"
 
 /**
  * Onboarded user + their active exam id. The (app) layout already gates on
  * onboarding, but content queries call this directly so the exam scope is
  * enforced at the query layer, not just the layout.
- *
- * ponytail: no plan/payment gate yet — any onboarded user sees content.
- * Add a plans.status check here in Phase 3 (Razorpay).
  */
 export const requireActiveExam = cache(async () => {
   const sessionUser = await requireUser()
@@ -27,6 +26,28 @@ export const requireActiveExam = cache(async () => {
   if (!user?.activeExamId) redirect("/onboarding")
   return { user, examId: user.activeExamId }
 })
+
+/** The caller's entitlement row for a batch, if any (live or expired). */
+export const getEntitlement = cache((userId: string, batchId: string) =>
+  db.query.entitlements.findFirst({
+    where: and(eq(entitlements.userId, userId), eq(entitlements.batchId, batchId)),
+  })
+)
+
+/**
+ * Hard server-side gate for a paid batch's deep content (subjects/lessons).
+ * A non-entitled user hitting the URL directly is redirected to checkout.
+ * Free batches pass through. This is the authoritative gate — UI lock states
+ * are cosmetic.
+ */
+export async function assertBatchUnlocked(
+  batch: { id: string; priceInr: number | null },
+  userId: string
+) {
+  if (!isPaid(batch)) return
+  const ent = await getEntitlement(userId, batch.id)
+  if (!isLive(ent)) redirect(`/checkout/${batch.id}`)
+}
 
 export function listBatches(examId: string) {
   return db.query.batches.findMany({

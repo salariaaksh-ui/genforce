@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { requireActiveExam, getLesson } from "@/lib/db/queries"
+import { requireActiveExam, getLesson, assertBatchUnlocked } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { LessonPlayer } from "@/components/app/lesson-player"
 import { Reveal } from "@/components/motion/reveal"
@@ -21,10 +21,11 @@ export default async function LessonPage({
   params: Promise<{ lessonId: string }>
 }) {
   const { lessonId } = await params
-  const { examId } = await requireActiveExam()
+  const { user, examId } = await requireActiveExam()
   const found = await getLesson(lessonId, examId)
   if (!found) notFound()
   const { lesson, subject, batch } = found
+  await assertBatchUnlocked(batch, user.id)
 
   return (
     <div className="space-y-6">
