@@ -84,7 +84,32 @@ the dashboard. Sections will be empty until content (step 3) is loaded.
 
 ---
 
-## Not built yet (future phase)
+## 5. Razorpay — course payments (`RAZORPAY_*`)
 
-- **Payments (Razorpay)** and locking content behind a paid plan. Right now any
-  signed-in student who picks an exam sees all of that exam's content.
+Paid courses are now locked until purchased. To turn payments on, add a Razorpay
+account's keys — until then, paid courses simply stay locked.
+
+From the **Razorpay Dashboard** (start in **Test mode** to trial it safely):
+
+1. **Settings → API Keys → Generate** → copy the Key ID and Key Secret.
+2. **Settings → Webhooks → Add** a webhook:
+   - URL: `https://<your-domain>/api/webhooks/razorpay`
+   - Active event: **`payment.captured`**
+   - Copy the **webhook secret** it shows.
+3. Fill `.env`:
+   ```
+   RAZORPAY_KEY_ID=<key id>
+   RAZORPAY_KEY_SECRET=<key secret>
+   RAZORPAY_WEBHOOK_SECRET=<webhook secret>
+   ```
+
+Switch to the **Live** keys when you're ready to take real money.
+
+### Which courses are paid, and for how long
+
+- A course (batch) is **paid** when it has a **price** (`priceInr`) in the content
+  file; a course with no price stays **free**.
+- Access is **lifetime** by default. To make a course expire, set **`accessDays`**
+  on that batch in the content file (e.g. `180` for six months).
+- Prices and `accessDays` come in through the same content import as everything
+  else (section 3) — no code change needed to reprice.
