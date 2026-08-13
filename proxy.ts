@@ -19,6 +19,7 @@ export const config = {
     "/onboarding/:path*",
     "/profile/:path*",
     "/batches/:path*",
+    "/checkout/:path*",
     "/subjects/:path*",
     "/lessons/:path*",
     "/pdfs/:path*",
