@@ -7,8 +7,10 @@ export const siteConfig = {
   tagline: "Exam prep for AFCAT, NDA, CDS & CAPF.",
   description:
     "Genforce is an exam-prep platform for Indian defence entrance exams — recorded classes, practice tests, and study material.",
-  /** Production origin; override with NEXT_PUBLIC_SITE_URL at build time. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3007",
+  /** Production origin; override with NEXT_PUBLIC_SITE_URL at build time. `||`
+   *  (not `??`) so an env var set to an empty string still falls back — Vercel
+   *  passes unset/blank vars as "", which would crash `new URL("")` at build. */
+  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3007",
   contact: {
     // TODO(client): real support address.
     email: "support@genforce.example",
