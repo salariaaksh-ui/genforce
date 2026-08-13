@@ -11,7 +11,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "node --env-file=.env --import tsx lib/db/seed.ts",
-    "db:local": "node --import tsx scripts/dev-pg.mts"
+    "db:local": "node --import tsx scripts/dev-pg.mts",
+    "db:import": "node --env-file=.env --import tsx scripts/import-content.mts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.3",

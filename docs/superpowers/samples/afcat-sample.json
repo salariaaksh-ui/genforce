@@ -1,0 +1,23 @@
+{
+  "exam": "afcat",
+  "batches": [
+    {
+      "name": "SAMPLE BATCH (AFCAT 1 2027)",
+      "cycle": "AFCAT 1 2027",
+      "priceInr": 2540,
+      "subjects": [
+        {
+          "name": "Maths",
+          "teacher": "Sample Teacher",
+          "lessons": [
+            { "idx": 1, "title": "Percentage Class 1", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871", "durationSec": 1830 },
+            { "idx": 2, "title": "Percentage Class 2", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871" }
+          ]
+        }
+      ]
+    }
+  ],
+  "pdfs": [{ "filename": "Sample formula sheet.pdf", "url": "https://example.com/sample.pdf" }],
+  "gallery": [{ "url": "https://picsum.photos/seed/gf1/600" }],
+  "tests": [{ "setName": "Sample Mock 1", "timeLimitMin": 120, "formUrl": "https://docs.google.com/forms/d/e/EXAMPLE/viewform" }]
+}
