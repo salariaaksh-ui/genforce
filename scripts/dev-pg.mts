@@ -8,7 +8,8 @@
  *   DATABASE_URL=pglite://.pglite npm run dev -- -p 3007
  *
  * "Sign in" during verification by setting a cookie on http://localhost:3007:
- *   document.cookie = "authjs.session-token=dev-session-afcat; path=/"  # populated
+ *   document.cookie = "authjs.session-token=dev-session-afcat; path=/"  # populated, PRO batch LOCKED
+ *   document.cookie = "authjs.session-token=dev-session-owner; path=/"  # owns the paid PRO batch
  *   document.cookie = "authjs.session-token=dev-session-nda; path=/"    # empty states
  *
  * Local verification only — not for production.
@@ -38,6 +39,9 @@ if (!hasBatch) {
   const VIDEO = "https://player.vimeo.com/video/76979871"
   const [batch] = await db.insert(s.batches)
     .values({ examId: afcat.id, name: "DEMO Batch — 2026 Cycle", cycle: "Jan 2026", sort: 0 }).returning()
+  // A paid course, to exercise the locked → checkout → unlock flow.
+  await db.insert(s.batches)
+    .values({ examId: afcat.id, name: "PRO Batch — AFCAT 2 2026", cycle: "Feb 2026", sort: 1, priceInr: 9999, accessDays: 180 })
   const subs = await db.insert(s.subjects).values([
     { batchId: batch.id, name: "Physics", teacher: "Sqn Ldr A. Rao", sort: 0 },
     { batchId: batch.id, name: "Reasoning", teacher: "Wg Cdr S. Nair", sort: 1 },
@@ -75,6 +79,19 @@ async function ensureSession(email: string, name: string, examId: string, token:
 await ensureSession("dev-afcat@example.com", "Dev Student (AFCAT)", afcat.id, "dev-session-afcat")
 await ensureSession("dev-nda@example.com", "Dev Student (NDA)", nda.id, "dev-session-nda")
 await ensureSession("dev-capf@example.com", "Dev Student (CAPF)", capf.id, "dev-session-capf")
+
+// An AFCAT student who already OWNS the paid PRO batch, to verify the unlocked
+// path. dev-afcat above owns nothing paid, so it shows the locked state.
+await ensureSession("dev-owner@example.com", "Dev Student (owner)", afcat.id, "dev-session-owner")
+{
+  const owner = (await db.query.users.findFirst({ where: eq(s.users.email, "dev-owner@example.com") }))!
+  const pro = await db.query.batches.findFirst({ where: eq(s.batches.name, "PRO Batch — AFCAT 2 2026") })
+  if (pro) {
+    await db.insert(s.entitlements)
+      .values({ userId: owner.id, batchId: pro.id, source: "grant", expiresAt: null })
+      .onConflictDoNothing({ target: [s.entitlements.userId, s.entitlements.batchId] })
+  }
+}
 
 // A user with NO active exam, to reach /onboarding (dev-session-onboard).
 {
