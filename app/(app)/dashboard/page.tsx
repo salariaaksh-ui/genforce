@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Layers } from "lucide-react"
-import { requireActiveExam, listBatches } from "@/lib/db/queries"
+import { requireActiveExam, listBatchesWithAccess } from "@/lib/db/queries"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
 import { CourseCard } from "@/components/app/course-card"
@@ -14,8 +14,8 @@ const RESOURCES = [
 ]
 
 export default async function Dashboard() {
-  const { examId } = await requireActiveExam()
-  const batchList = await listBatches(examId)
+  const { user, examId } = await requireActiveExam()
+  const batchList = await listBatchesWithAccess(examId, user.id)
 
   return (
     <div className="space-y-12">
@@ -63,10 +63,12 @@ export default async function Dashboard() {
             {batchList.map((b, i) => (
               <Reveal key={b.id} delay={i * 0.05}>
                 <CourseCard
-                  href={`/batches/${b.id}`}
+                  href={b.unlocked ? `/batches/${b.id}` : `/checkout/${b.id}`}
                   name={b.name}
                   cycle={b.cycle}
                   thumbnail={b.thumbnail}
+                  locked={!b.unlocked}
+                  priceInr={b.priceInr}
                 />
               </Reveal>
             ))}

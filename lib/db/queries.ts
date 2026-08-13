@@ -13,7 +13,7 @@ import {
   entitlements,
 } from "./schema"
 import { requireUser } from "@/lib/auth/guards"
-import { isPaid, isLive } from "@/lib/payments/gate"
+import { isPaid, isLive, isUnlocked } from "@/lib/payments/gate"
 
 /**
  * Onboarded user + their active exam id. The (app) layout already gates on
@@ -54,6 +54,17 @@ export function listBatches(examId: string) {
     where: eq(batches.examId, examId),
     orderBy: [asc(batches.sort)],
   })
+}
+
+/** Batches for the exam, each tagged with whether the caller can open it. Paid
+ *  batches without a live entitlement come back `unlocked: false`. */
+export async function listBatchesWithAccess(examId: string, userId: string) {
+  const list = await listBatches(examId)
+  const ents = await db.query.entitlements.findMany({
+    where: eq(entitlements.userId, userId),
+  })
+  const byBatch = new Map(ents.map((e) => [e.batchId, e]))
+  return list.map((b) => ({ ...b, unlocked: isUnlocked(b, byBatch.get(b.id)) }))
 }
 
 /** Scoped by examId so a user can't reach another exam's batch by guessing ids. */
