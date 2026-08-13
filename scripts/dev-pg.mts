@@ -39,9 +39,14 @@ if (!hasBatch) {
   const VIDEO = "https://player.vimeo.com/video/76979871"
   const [batch] = await db.insert(s.batches)
     .values({ examId: afcat.id, name: "DEMO Batch — 2026 Cycle", cycle: "Jan 2026", sort: 0 }).returning()
-  // A paid course, to exercise the locked → checkout → unlock flow.
-  await db.insert(s.batches)
-    .values({ examId: afcat.id, name: "PRO Batch — AFCAT 2 2026", cycle: "Feb 2026", sort: 1, priceInr: 9999, accessDays: 180 })
+  // A paid course with real content, to exercise the locked → checkout → unlock
+  // flow AND the direct-URL hard gate (a locked user hitting a subject/lesson).
+  const [pro] = await db.insert(s.batches)
+    .values({ examId: afcat.id, name: "PRO Batch — AFCAT 2 2026", cycle: "Feb 2026", sort: 1, priceInr: 9999, accessDays: 180 }).returning()
+  const [proSub] = await db.insert(s.subjects)
+    .values({ batchId: pro.id, name: "Advanced Maths", teacher: "Ashish Garg", sort: 0 }).returning()
+  await db.insert(s.lessons)
+    .values({ subjectId: proSub.id, idx: 1, title: "Probability — advanced", source: "vimeo", playUrl: VIDEO, durationSec: 2100 })
   const subs = await db.insert(s.subjects).values([
     { batchId: batch.id, name: "Physics", teacher: "Sqn Ldr A. Rao", sort: 0 },
     { batchId: batch.id, name: "Reasoning", teacher: "Wg Cdr S. Nair", sort: 1 },
