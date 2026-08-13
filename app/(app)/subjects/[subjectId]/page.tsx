@@ -11,6 +11,17 @@ function fmtDuration(sec: number | null) {
   return `${Math.round(sec / 60)} min`
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ subjectId: string }>
+}) {
+  const { subjectId } = await params
+  const { examId } = await requireActiveExam()
+  const found = await getSubject(subjectId, examId)
+  return { title: found?.subject.name ?? "Subject" }
+}
+
 export default async function SubjectPage({
   params,
 }: {

@@ -4,6 +4,17 @@ import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { LessonPlayer } from "@/components/app/lesson-player"
 import { Reveal } from "@/components/motion/reveal"
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lessonId: string }>
+}) {
+  const { lessonId } = await params
+  const { examId } = await requireActiveExam()
+  const found = await getLesson(lessonId, examId)
+  return { title: found?.lesson.title ?? "Lesson" }
+}
+
 export default async function LessonPage({
   params,
 }: {

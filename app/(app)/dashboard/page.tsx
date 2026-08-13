@@ -18,6 +18,7 @@ export default async function Dashboard() {
 
   return (
     <div className="space-y-12">
+      <h1 className="sr-only">Dashboard</h1>
       <section>
         <Reveal onMount>
           <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">

@@ -12,6 +12,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     verificationTokensTable: verificationTokens,
   }),
   providers: [Google], // reads AUTH_GOOGLE_ID / AUTH_GOOGLE_SECRET from env
+  // Self-hosted (Hostinger Node, not Vercel): Auth.js v5 otherwise rejects every
+  // request in production with UntrustedHost. Trust the host set by our own proxy.
+  trustHost: true,
   session: { strategy: "database" },
   pages: { signIn: "/login" },
   callbacks: {

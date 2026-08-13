@@ -1,3 +1,4 @@
+import { cache } from "react"
 import { and, asc, eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
 import { db } from "./index"
@@ -20,12 +21,12 @@ import { requireUser } from "@/lib/auth/guards"
  * ponytail: no plan/payment gate yet — any onboarded user sees content.
  * Add a plans.status check here in Phase 3 (Razorpay).
  */
-export async function requireActiveExam() {
+export const requireActiveExam = cache(async () => {
   const sessionUser = await requireUser()
   const user = await db.query.users.findFirst({ where: eq(users.id, sessionUser.id) })
   if (!user?.activeExamId) redirect("/onboarding")
   return { user, examId: user.activeExamId }
-}
+})
 
 export function listBatches(examId: string) {
   return db.query.batches.findMany({
@@ -35,11 +36,11 @@ export function listBatches(examId: string) {
 }
 
 /** Scoped by examId so a user can't reach another exam's batch by guessing ids. */
-export function getBatch(batchId: string, examId: string) {
-  return db.query.batches.findFirst({
+export const getBatch = cache((batchId: string, examId: string) =>
+  db.query.batches.findFirst({
     where: and(eq(batches.id, batchId), eq(batches.examId, examId)),
   })
-}
+)
 
 export function listSubjects(batchId: string) {
   return db.query.subjects.findMany({
@@ -49,7 +50,7 @@ export function listSubjects(batchId: string) {
 }
 
 /** Joins up to batch so ownership is checked against the caller's exam. */
-export async function getSubject(subjectId: string, examId: string) {
+export const getSubject = cache(async (subjectId: string, examId: string) => {
   const rows = await db
     .select({ subject: subjects, batch: batches })
     .from(subjects)
@@ -57,7 +58,7 @@ export async function getSubject(subjectId: string, examId: string) {
     .where(and(eq(subjects.id, subjectId), eq(batches.examId, examId)))
     .limit(1)
   return rows[0]
-}
+})
 
 export function listLessons(subjectId: string) {
   return db.query.lessons.findMany({
@@ -67,7 +68,7 @@ export function listLessons(subjectId: string) {
 }
 
 /** Joins subject → batch so ownership is checked against the caller's exam. */
-export async function getLesson(lessonId: string, examId: string) {
+export const getLesson = cache(async (lessonId: string, examId: string) => {
   const rows = await db
     .select({ lesson: lessons, subject: subjects, batch: batches })
     .from(lessons)
@@ -76,7 +77,7 @@ export async function getLesson(lessonId: string, examId: string) {
     .where(and(eq(lessons.id, lessonId), eq(batches.examId, examId)))
     .limit(1)
   return rows[0]
-}
+})
 
 export function listPdfs(examId: string) {
   return db.query.pdfs.findMany({

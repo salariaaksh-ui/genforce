@@ -6,6 +6,17 @@ import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ batchId: string }>
+}) {
+  const { batchId } = await params
+  const { examId } = await requireActiveExam()
+  const batch = await getBatch(batchId, examId)
+  return { title: batch?.name ?? "Batch" }
+}
+
 export default async function BatchPage({
   params,
 }: {
