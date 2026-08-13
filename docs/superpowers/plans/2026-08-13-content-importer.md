@@ -118,20 +118,23 @@ Expected: a new `drizzle/000N_*.sql` + updated `drizzle/meta/*` appear, containi
 Run: `rm -rf .pglite && npm run db:local`
 Expected: `seeded .pglite ...` with no migration error.
 
-Then verify the new columns exist by importing the db and inserting a batch with them. Create a scratch check (delete after):
+Then verify the new columns + unique keys exist. Use a `.mts` scratch file (do
+NOT use `node -e`: inline eval is transformed as CJS and cannot import the
+top-level-await `lib/db/index.ts`). Open PGlite directly to sidestep the db module:
 
 ```bash
-DATABASE_URL=pglite://.pglite node --import tsx -e '
-import { db } from "./lib/db/index.ts"
-import { exams, batches } from "./lib/db/schema.ts"
-import { eq } from "drizzle-orm"
-const e = await db.query.exams.findFirst({ where: eq(exams.slug, "afcat") })
-const [b] = await db.insert(batches).values({ examId: e.id, name: "ZZ check", thumbnail: "/x.jpg", priceInr: 100, description: "d", sort: 9 }).returning()
-console.log("ok", b.thumbnail, b.priceInr, b.description)
-process.exit(0)
-'
+cat > scripts/_check.mts <<'EOF'
+import { PGlite } from "@electric-sql/pglite"
+const pg = await PGlite.create(".pglite")
+const cols = await pg.query("select column_name from information_schema.columns where table_name='batches' order by column_name")
+const uniq = await pg.query("select conname from pg_constraint where contype='u' and conrelid in (select oid from pg_class where relname in ('batches','subjects','gallery_images','test_forms')) order by conname")
+console.log("cols:", cols.rows.map(r => r.column_name).join(", "))
+console.log("uniq:", uniq.rows.map(r => r.conname).join(", "))
+await pg.close(); process.exit(0)
+EOF
+node --import tsx scripts/_check.mts && rm -f scripts/_check.mts
 ```
-Expected: `ok /x.jpg 100 d`
+Expected: `cols:` includes `thumbnail, price_inr, description`; `uniq:` lists the four `*_unique` constraints.
 
 - [ ] **Step 4: Commit**
 
@@ -686,12 +689,21 @@ if (dry) {
   process.exit(0)
 }
 
-// Import db lazily so --dry never opens a DB connection.
-const { db } = await import("../lib/db")
+// Build the db lazily so --dry never opens a DB connection. Import buildDb (not
+// ../lib/db) — tsx would transform the top-level-await index module as CJS and
+// fail with "Top-level await is currently not supported with the cjs output".
+const { buildDb } = await import("../lib/db/build")
+const db = await buildDb()
 const result = await importContent(db, parsed.data)
 console.log(`imported into exam "${parsed.data.exam}":`, result)
 process.exit(0)
 ```
+
+> **Note (added during execution):** the loader needs a db without importing the
+> top-level-await `lib/db/index.ts`. Extract `lib/db/build.ts` exporting
+> `async function buildDb(): Promise<PostgresJsDatabase<typeof schema>>` (the
+> postgres-vs-pglite branch, no top-level await), and change `index.ts` to
+> `export const db = await buildDb()`. Scripts import `buildDb`; the app imports `db`.
 
 - [ ] **Step 2: Add the npm script**
 

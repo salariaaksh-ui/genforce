@@ -56,6 +56,23 @@ document.cookie = "authjs.session-token=dev-session-onboard; path=/" // onboardi
 
 Stop `next dev` before re-running `db:local` (both hold the `./.pglite` dir).
 
+### Importing content
+
+Load a content file (see `docs/superpowers/specs/2026-08-13-content-importer-design.md`):
+
+```bash
+npm run db:import path/to/afcat.json            # load into the .env DATABASE_URL (Neon)
+npm run db:import path/to/afcat.json -- --dry   # validate + report counts, no writes
+```
+
+`db:import` reads `DATABASE_URL` from `.env` (via `--env-file`), so it targets the
+real DB. To import into the **offline PGlite** DB instead, call node directly with
+the pglite URL (the `--env-file` in `db:import` would otherwise override it):
+
+```bash
+DATABASE_URL=pglite://.pglite node --import tsx scripts/import-content.mts path/to/afcat.json
+```
+
 ---
 
 ## What's pre-built
