@@ -40,3 +40,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local dev PGlite data (embedded Postgres for verification)
+.pglite/
+
+# verification screenshots (local evidence, not source)
+docs/verify/*.png
+docs/verify/*.jpg

@@ -33,6 +33,29 @@ Regenerate the placeholder sample images any time:
 node scripts/generate-placeholders.mjs
 ```
 
+### Offline dev (no database)
+
+To run the full signed-in app with **no Postgres/Neon and no Google OAuth** —
+e.g. for local UI work or verification — use the embedded PGlite database:
+
+```bash
+npm run db:local                              # seed ./.pglite (exams + demo AFCAT content + dev sessions)
+DATABASE_URL=pglite://.pglite npm run dev -- -p 3007
+```
+
+`DATABASE_URL=pglite://<dir>` makes `lib/db/index.ts` run an in-process Postgres
+(PGlite) instead of postgres.js — no server, no install. It's a devDependency,
+imported dynamically only on that branch, so production (a `postgres://` URL) is
+unaffected. "Sign in" by setting a cookie on the page:
+
+```js
+document.cookie = "authjs.session-token=dev-session-afcat; path=/"   // populated AFCAT
+document.cookie = "authjs.session-token=dev-session-nda; path=/"     // empty states
+document.cookie = "authjs.session-token=dev-session-onboard; path=/" // onboarding
+```
+
+Stop `next dev` before re-running `db:local` (both hold the `./.pglite` dir).
+
 ---
 
 ## What's pre-built
