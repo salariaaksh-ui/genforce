@@ -82,26 +82,37 @@ export const plans = pgTable(
   (t) => ({ userExam: unique().on(t.userId, t.examId) })
 )
 
-export const batches = pgTable("batches", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  examId: uuid("exam_id")
-    .notNull()
-    .references(() => exams.id, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-  cycle: text("cycle"),
-  sort: integer("sort").default(0).notNull(),
-})
+export const batches = pgTable(
+  "batches",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    examId: uuid("exam_id")
+      .notNull()
+      .references(() => exams.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    cycle: text("cycle"),
+    thumbnail: text("thumbnail"),
+    description: text("description"),
+    priceInr: integer("price_inr"),
+    sort: integer("sort").default(0).notNull(),
+  },
+  (t) => ({ examName: unique().on(t.examId, t.name) })
+)
 
-export const subjects = pgTable("subjects", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  batchId: uuid("batch_id")
-    .notNull()
-    .references(() => batches.id, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-  teacher: text("teacher"),
-  coverImage: text("cover_image"),
-  sort: integer("sort").default(0).notNull(),
-})
+export const subjects = pgTable(
+  "subjects",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    batchId: uuid("batch_id")
+      .notNull()
+      .references(() => batches.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    teacher: text("teacher"),
+    coverImage: text("cover_image"),
+    sort: integer("sort").default(0).notNull(),
+  },
+  (t) => ({ batchName: unique().on(t.batchId, t.name) })
+)
 
 export const lessons = pgTable(
   "lessons",
@@ -137,22 +148,30 @@ export const pdfs = pgTable(
   (t) => ({ examHash: unique().on(t.examId, t.fileHash) })
 )
 
-export const galleryImages = pgTable("gallery_images", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  examId: uuid("exam_id")
-    .notNull()
-    .references(() => exams.id, { onDelete: "cascade" }),
-  url: text("url").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+export const galleryImages = pgTable(
+  "gallery_images",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    examId: uuid("exam_id")
+      .notNull()
+      .references(() => exams.id, { onDelete: "cascade" }),
+    url: text("url").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => ({ examUrl: unique().on(t.examId, t.url) })
+)
 
-export const testForms = pgTable("test_forms", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  examId: uuid("exam_id")
-    .notNull()
-    .references(() => exams.id, { onDelete: "cascade" }),
-  setName: text("set_name"),
-  timeLimitMin: integer("time_limit_min"),
-  formUrl: text("form_url").notNull(),
-  formDate: date("form_date"),
-})
+export const testForms = pgTable(
+  "test_forms",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    examId: uuid("exam_id")
+      .notNull()
+      .references(() => exams.id, { onDelete: "cascade" }),
+    setName: text("set_name"),
+    timeLimitMin: integer("time_limit_min"),
+    formUrl: text("form_url").notNull(),
+    formDate: date("form_date"),
+  },
+  (t) => ({ examSet: unique().on(t.examId, t.setName) })
+)
