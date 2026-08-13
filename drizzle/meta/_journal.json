@@ -15,6 +15,20 @@
       "when": 1786611970288,
       "tag": "0001_workable_sally_floyd",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786621580973,
+      "tag": "0002_payments_add",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1786621595390,
+      "tag": "0003_drop_plans",
+      "breakpoints": true
     }
   ]
 }

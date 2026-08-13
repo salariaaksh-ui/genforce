@@ -2,7 +2,7 @@ import Link from "next/link"
 import { eq } from "drizzle-orm"
 import { requireUser } from "@/lib/auth/guards"
 import { db } from "@/lib/db"
-import { users, plans, exams } from "@/lib/db/schema"
+import { users, entitlements, batches } from "@/lib/db/schema"
 import { updatePhone } from "@/app/actions/profile"
 import { signOut } from "@/auth"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
@@ -12,11 +12,11 @@ export const metadata = { title: "Profile" }
 export default async function Profile() {
   const sessionUser = await requireUser()
   const row = await db.query.users.findFirst({ where: eq(users.id, sessionUser.id) })
-  const myPlans = await db
-    .select({ status: plans.status, expiresAt: plans.expiresAt, exam: exams.name })
-    .from(plans)
-    .innerJoin(exams, eq(plans.examId, exams.id))
-    .where(eq(plans.userId, sessionUser.id))
+  const myCourses = await db
+    .select({ course: batches.name, expiresAt: entitlements.expiresAt })
+    .from(entitlements)
+    .innerJoin(batches, eq(entitlements.batchId, batches.id))
+    .where(eq(entitlements.userId, sessionUser.id))
 
   return (
     <main id="main-content" className="mx-auto max-w-lg space-y-10 p-6 py-10">
@@ -56,18 +56,17 @@ export default async function Profile() {
 
       <section>
         <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
-          My plans
+          My courses
         </h2>
-        {myPlans.length === 0 ? (
-          <p className="mt-3 text-muted-foreground">No active plans.</p>
+        {myCourses.length === 0 ? (
+          <p className="mt-3 text-muted-foreground">No courses yet.</p>
         ) : (
           <ul className="mt-3 divide-y overflow-hidden rounded-2xl border">
-            {myPlans.map((p, i) => (
+            {myCourses.map((c, i) => (
               <li key={i} className="flex items-center justify-between gap-4 bg-card px-5 py-3">
-                <span className="font-semibold">{p.exam}</span>
+                <span className="font-semibold">{c.course}</span>
                 <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                  {p.status}
-                  {p.expiresAt ? ` · expires ${p.expiresAt.toDateString()}` : ""}
+                  {c.expiresAt ? `expires ${c.expiresAt.toDateString()}` : "Lifetime"}
                 </span>
               </li>
             ))}

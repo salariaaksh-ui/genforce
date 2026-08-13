@@ -65,21 +65,42 @@ export const verificationTokens = pgTable(
   (t) => ({ pk: primaryKey({ columns: [t.identifier, t.token] }) })
 )
 
-export const plans = pgTable(
-  "plans",
+// Payments — a purchase is per-course (batch). An order records the Razorpay
+// transaction; an entitlement is the resulting access grant. See
+// docs/superpowers/specs/2026-08-13-razorpay-payments-design.md.
+export const orders = pgTable("orders", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  batchId: uuid("batch_id")
+    .notNull()
+    .references(() => batches.id, { onDelete: "cascade" }),
+  amountInr: integer("amount_inr").notNull(), // price snapshot at order time
+  currency: text("currency").notNull().default("INR"),
+  razorpayOrderId: text("razorpay_order_id").notNull().unique(),
+  razorpayPaymentId: text("razorpay_payment_id"),
+  status: text("status").notNull().default("created"), // created | paid | failed
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  paidAt: timestamp("paid_at"),
+})
+
+export const entitlements = pgTable(
+  "entitlements",
   {
     id: uuid("id").defaultRandom().primaryKey(),
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    examId: uuid("exam_id")
+    batchId: uuid("batch_id")
       .notNull()
-      .references(() => exams.id),
-    status: text("status").notNull().default("none"),
-    expiresAt: timestamp("expires_at"),
+      .references(() => batches.id, { onDelete: "cascade" }),
+    source: text("source").notNull().default("purchase"), // purchase | grant
+    orderId: uuid("order_id").references(() => orders.id),
+    expiresAt: timestamp("expires_at"), // null = lifetime
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (t) => ({ userExam: unique().on(t.userId, t.examId) })
+  (t) => ({ userBatch: unique().on(t.userId, t.batchId) })
 )
 
 export const batches = pgTable(
@@ -94,6 +115,7 @@ export const batches = pgTable(
     thumbnail: text("thumbnail"),
     description: text("description"),
     priceInr: integer("price_inr"),
+    accessDays: integer("access_days"), // null = lifetime access on purchase
     sort: integer("sort").default(0).notNull(),
   },
   (t) => ({ examName: unique().on(t.examId, t.name) })
