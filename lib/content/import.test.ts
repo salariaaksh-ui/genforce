@@ -86,6 +86,14 @@ describe("importContent", () => {
     expect(r.pdfs).toEqual({ inserted: 0, skipped: 1 })
   })
 
+  it("round-trips batch accessDays", async () => {
+    const withDays = structuredClone(content)
+    withDays.batches[0].accessDays = 180
+    await importContent(db, withDays)
+    const b = await db.query.batches.findFirst({ where: eq(schema.batches.name, "JULIET") })
+    expect(b?.accessDays).toBe(180)
+  })
+
   it("throws if the exam is not seeded", async () => {
     const pg = new PGlite()
     const bare = drizzle(pg, { schema })

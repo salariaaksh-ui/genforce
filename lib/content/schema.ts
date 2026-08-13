@@ -33,6 +33,7 @@ const batch = z.object({
   sort: z.number().int().default(0),
   thumbnail: z.string().optional(),
   priceInr: z.number().int().nonnegative().optional(),
+  accessDays: z.number().int().positive().optional(), // omit = lifetime access
   description: z.string().optional(),
   subjects: z.array(subject).default([]),
 })

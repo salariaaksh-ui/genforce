@@ -42,6 +42,7 @@ export async function importContent(db: Db, data: Content): Promise<ImportResult
         sort: b.sort,
         thumbnail: b.thumbnail ?? null,
         priceInr: b.priceInr ?? null,
+        accessDays: b.accessDays ?? null,
         description: b.description ?? null,
       }
       const eb = await tx.query.batches.findFirst({
