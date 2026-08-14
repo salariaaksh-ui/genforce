@@ -3,6 +3,7 @@ import { requireActiveExam, listPdfs } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
+import { formatDate } from "@/lib/format"
 
 export const metadata = { title: "PDFs" }
 
@@ -35,8 +36,15 @@ export default async function PdfsPage() {
                 rel="noopener noreferrer"
                 className="flex items-center justify-between gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent"
               >
-                <span className="font-medium">{f.filename}</span>
-                <span className="font-mono text-xs uppercase tracking-widest text-primary">
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-medium">{f.filename}</span>
+                  {formatDate(f.uploadedAt) && (
+                    <span className="mt-0.5 block font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                      {formatDate(f.uploadedAt)}
+                    </span>
+                  )}
+                </span>
+                <span className="flex-none font-mono text-xs uppercase tracking-widest text-primary">
                   Download ↓
                 </span>
               </a>

@@ -11,14 +11,17 @@
           "name": "Maths",
           "teacher": "Ashish Garg",
           "lessons": [
-            { "idx": 1, "title": "Percentage Class 1", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871", "durationSec": 1830 }
+            { "idx": 1, "title": "Percentage Class 1", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871", "durationSec": 4860, "recordedOn": "2027-01-08", "sizeBytes": 336593715 },
+            { "idx": 2, "title": "Percentage Class 2", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871", "durationSec": 4380, "recordedOn": "2027-01-10", "sizeBytes": 219152384 },
+            { "idx": 3, "title": "Ratio and Proportion", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871", "durationSec": 3780, "recordedOn": "2027-01-14", "sizeBytes": 123731968 }
           ]
         },
         {
           "name": "Reasoning",
           "teacher": "Anurag Tripathi",
           "lessons": [
-            { "idx": 1, "title": "Coding Decoding", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871" }
+            { "idx": 1, "title": "Coding Decoding Class 1", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871", "durationSec": 3960, "recordedOn": "2027-01-09", "sizeBytes": 227540992 },
+            { "idx": 2, "title": "Blood Relations", "source": "vimeo", "playUrl": "https://player.vimeo.com/video/76979871", "durationSec": 4440, "recordedOn": "2027-01-11", "sizeBytes": 243269632 }
           ]
         }
       ]

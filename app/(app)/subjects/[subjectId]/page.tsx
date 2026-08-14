@@ -5,11 +5,7 @@ import { requireActiveExam, getSubject, listLessons, assertBatchUnlocked } from 
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
-
-function fmtDuration(sec: number | null) {
-  if (!sec) return null
-  return `${Math.round(sec / 60)} min`
-}
+import { formatDuration, formatDate, formatFileSize } from "@/lib/format"
 
 export async function generateMetadata({
   params,
@@ -70,13 +66,22 @@ export default async function SubjectPage({
                 <span className="grid size-8 flex-none place-items-center rounded-full bg-secondary font-mono text-xs tabular-nums text-secondary-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                   {String(l.idx).padStart(2, "0")}
                 </span>
-                <span className="flex-1 font-semibold">{l.title}</span>
-                {fmtDuration(l.durationSec) && (
-                  <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                    {fmtDuration(l.durationSec)}
-                  </span>
-                )}
-                <span aria-hidden className="text-primary transition-transform group-hover:translate-x-0.5">→</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-semibold">{l.title}</span>
+                  {(() => {
+                    const meta = [
+                      formatDuration(l.durationSec),
+                      formatDate(l.recordedOn),
+                      formatFileSize(l.sizeBytes),
+                    ].filter(Boolean)
+                    return meta.length > 0 ? (
+                      <span className="mt-0.5 block font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                        {meta.join(" · ")}
+                      </span>
+                    ) : null
+                  })()}
+                </span>
+                <span aria-hidden className="flex-none text-primary transition-transform group-hover:translate-x-0.5">→</span>
               </Link>
             </li>
           ))}

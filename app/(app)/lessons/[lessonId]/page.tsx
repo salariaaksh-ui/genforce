@@ -3,6 +3,7 @@ import { requireActiveExam, getLesson, assertBatchUnlocked } from "@/lib/db/quer
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { LessonPlayer } from "@/components/app/lesson-player"
 import { Reveal } from "@/components/motion/reveal"
+import { formatDuration, formatDate, formatFileSize } from "@/lib/format"
 
 export async function generateMetadata({
   params,
@@ -43,8 +44,14 @@ export default async function LessonPage({
             {lesson.title}
           </h1>
           <p className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            {subject.name}
-            {lesson.recordedOn ? ` · ${lesson.recordedOn}` : ""}
+            {[
+              subject.name,
+              formatDuration(lesson.durationSec),
+              formatDate(lesson.recordedOn),
+              formatFileSize(lesson.sizeBytes),
+            ]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
         </div>
       </Reveal>
