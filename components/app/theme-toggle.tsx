@@ -1,27 +1,32 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useSyncExternalStore } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { Moon, Sun } from "lucide-react"
+
+/** Reads the current theme straight from the <html> `.dark` class via
+ *  useSyncExternalStore — a MutationObserver re-renders on any class change, so
+ *  the icon stays in sync whether the class is flipped here or elsewhere. */
+function subscribe(onChange: () => void) {
+  const observer = new MutationObserver(onChange)
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
+  return () => observer.disconnect()
+}
+const isDark = () => document.documentElement.classList.contains("dark")
 
 /** Manual light/dark switch. Toggles `.dark` on <html> and persists the choice;
  *  the no-flash script in the root layout applies it before paint on load. */
 export function ThemeToggle() {
-  const [dark, setDark] = useState(false)
+  const dark = useSyncExternalStore(subscribe, isDark, () => false)
   const reduce = useReducedMotion()
-
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"))
-  }, [])
 
   function toggle() {
     const el = document.documentElement
     const next = !el.classList.contains("dark")
-    el.classList.toggle("dark", next)
+    el.classList.toggle("dark", next) // observer above re-renders the icon
     try {
       localStorage.setItem("theme", next ? "dark" : "light")
     } catch {}
-    setDark(next)
   }
 
   return (

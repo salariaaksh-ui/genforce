@@ -21,9 +21,15 @@ export function paymentsConfigured(): boolean {
   return Boolean(keyId() && keySecret())
 }
 
-/** No real keys, but RAZORPAY_MOCK=1 — offline dev flow, never in production. */
+/** No real keys, but RAZORPAY_MOCK=1 — offline dev flow, never in production.
+ *  The NODE_ENV guard is a hard kill-switch: even a stray RAZORPAY_MOCK=1 left
+ *  in a production env can never open the free-entitlement mock-capture path. */
 export function mockMode(): boolean {
-  return !paymentsConfigured() && process.env.RAZORPAY_MOCK === "1"
+  return (
+    process.env.NODE_ENV !== "production" &&
+    !paymentsConfigured() &&
+    process.env.RAZORPAY_MOCK === "1"
+  )
 }
 
 /** The publishable key id for the client checkout (null in mock mode). */
