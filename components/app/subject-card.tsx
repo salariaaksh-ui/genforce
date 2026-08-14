@@ -35,7 +35,7 @@ export function SubjectCard({
             <BookOpen className="size-8" aria-hidden />
           </div>
         )}
-        <span className="absolute left-3 top-3 rounded-full bg-emerald-500/90 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-white">
+        <span className="absolute left-3 top-3 rounded-full bg-emerald-700 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-white">
           Available
         </span>
       </div>
