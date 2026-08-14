@@ -36,7 +36,7 @@ export function CourseCard({
             alt=""
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
-            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            className="object-contain transition-transform duration-300 group-hover:scale-[1.03]"
           />
         ) : (
           <div className="grid h-full place-items-center bg-gradient-to-br from-primary/25 to-secondary text-primary">
