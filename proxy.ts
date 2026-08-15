@@ -15,6 +15,7 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin/:path*",
     "/dashboard/:path*",
     "/onboarding/:path*",
     "/profile/:path*",

@@ -9,9 +9,11 @@ import { ThemeToggle } from "./theme-toggle"
 export async function TopBar({
   userName,
   activeExamId,
+  isAdmin = false,
 }: {
   userName: string
   activeExamId: string
+  isAdmin?: boolean
 }) {
   const exam = await db.query.exams.findFirst({ where: eq(exams.id, activeExamId) })
   return (
@@ -21,6 +23,14 @@ export async function TopBar({
           <Logo />
         </Link>
         <div className="flex items-center gap-3">
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="rounded-lg border px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              Admin
+            </Link>
+          )}
           <ExamSwitcher currentLabel={exam?.name ?? "Exam"} />
           <ThemeToggle />
           <Link
