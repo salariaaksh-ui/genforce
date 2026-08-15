@@ -53,12 +53,12 @@ Genforce is a learning platform for Indian defence-entrance exam prep (AFCAT / N
 | # | Item | Why it's needed | Blocks |
 |---|---|---|---|
 | 1 | **Real course content** (videos, notes, tests) | Everything shows demo/empty until loaded | Real launch |
-| 2 | **Course prices** | Prices currently display as `₹xxxx` placeholder (per request). **Important:** checkout would charge the real database amount, so restore real prices before enabling payments. | Paid launch |
-| 3 | **Razorpay account** (live keys + webhook secret) | Payments are in mock mode until set | Paid launch |
-| 4 | **Own domain** | Site is on a temporary `.vercel.app` URL; also update the Google OAuth redirect + `NEXT_PUBLIC_SITE_URL`, and deindex the old URL | Launch |
-| 5 | **Real support email** | Privacy/Terms show a placeholder address | Launch |
-| 6 | **Legal review** | Privacy & Terms are solid drafts but should be reviewed by counsel for the client's jurisdiction | Launch |
-| 7 | **Google OAuth: publish or add test users** | Currently anyone not on the test-user list can't sign in unless the app is published | Public login |
+| 2 | **Razorpay LIVE keys** (after KYC) + a LIVE-mode webhook | Payments are connected in **Test mode** and working; live money needs activated (KYC) live keys + a live webhook, then update the 3 Vercel env vars | Paid launch |
+| 3 | **Own domain** | Site is on a temporary `.vercel.app` URL; also update the Google OAuth redirect + `NEXT_PUBLIC_SITE_URL` + the Razorpay webhook URL, and deindex the old URL | Launch |
+| 4 | **Real support email** | Privacy/Terms show a placeholder address | Launch |
+| 5 | **Legal review** | Privacy & Terms are solid drafts but should be reviewed by counsel for the client's jurisdiction | Launch |
+
+**Done since first handoff:** ✅ Google login published (anyone can sign in) · ✅ real prices live (Juliet ₹2,540 · India ₹7,999 · Game Changer ₹9,999) · ✅ Razorpay connected in Test mode (keys + webhook, verified live).
 
 Full technical detail for 1–5 lives in `CLIENT-INPUTS.md`.
 
@@ -66,7 +66,7 @@ Full technical detail for 1–5 lives in `CLIENT-INPUTS.md`.
 
 ## Known limitations / notes
 
-- **Prices** display `₹xxxx` by request — see item 2 above. This is the single most important thing to fix before charging money.
+- **Payments** are live in **Test mode** — use Razorpay test card `4111 1111 1111 1111` to try a purchase. Switch to Live keys (after KYC) to take real money.
 - **Game Changer** thumbnail uses a clean branded banner crop (its source is a tall portrait poster; the full poster doesn't fit a wide card well). Juliet & India show the full photos with the baked-in price/cart graphics painted out.
 - Payments have not been exercised end-to-end against **live** Razorpay keys (none issued yet).
 - A full content-level CSP is deferred until the live payment flow can be tested, so a mis-scoped rule can't break checkout.
