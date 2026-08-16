@@ -40,9 +40,12 @@ export default async function Profile() {
             defaultValue={row?.phone ?? ""}
             inputMode="numeric"
             autoComplete="tel"
+            pattern="[0-9]{10}"
+            maxLength={10}
+            title="Enter a 10-digit mobile number"
             placeholder="10-digit number"
             aria-label="Phone number"
-            className="flex-1 rounded-xl border bg-card px-4 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="min-w-0 flex-1 rounded-xl border bg-card px-4 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
           <button
             type="submit"
