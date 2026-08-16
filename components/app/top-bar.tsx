@@ -36,7 +36,7 @@ export async function TopBar({
           <Link
             href="/profile"
             aria-label="Your profile"
-            className="flex size-8 items-center justify-center rounded-full border font-mono text-xs font-semibold uppercase hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="flex size-9 items-center justify-center rounded-full border font-mono text-xs font-semibold uppercase hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {userName[0]?.toUpperCase() ?? "U"}
           </Link>

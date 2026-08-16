@@ -18,7 +18,7 @@ export default async function AdminGalleryPage({
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-2xl font-extrabold tracking-tight">Gallery</h1>
-        <div className="w-56">
+        <div className="w-full sm:w-56">
           <label className={LABEL}>Exam</label>
           <NavSelect param="exam" value={active?.slug} placeholder="Pick an exam" options={exams.map((e) => ({ value: e.slug, label: e.name }))} />
         </div>

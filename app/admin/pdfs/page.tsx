@@ -18,7 +18,7 @@ export default async function AdminPdfsPage({
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-2xl font-extrabold tracking-tight">PDFs</h1>
-        <div className="w-56">
+        <div className="w-full sm:w-56">
           <label className={LABEL}>Exam</label>
           <NavSelect param="exam" value={active?.slug} placeholder="Pick an exam" options={exams.map((e) => ({ value: e.slug, label: e.name }))} />
         </div>
@@ -40,7 +40,7 @@ export default async function AdminPdfsPage({
         ) : (
           files.map((f) => (
             <div key={f.id} className="flex items-center justify-between gap-4 border-b bg-card px-5 py-3 last:border-0">
-              <a href={f.url} target="_blank" rel="noopener noreferrer" className="truncate font-medium hover:underline">{f.filename}</a>
+              <a href={f.url} target="_blank" rel="noopener noreferrer" className="min-w-0 flex-1 truncate font-medium hover:underline focus-visible:outline-none focus-visible:underline">{f.filename}</a>
               <form action={deletePdfAction}>
                 <input type="hidden" name="id" value={f.id} />
                 <ConfirmButton message={`Delete "${f.filename}"?`} />

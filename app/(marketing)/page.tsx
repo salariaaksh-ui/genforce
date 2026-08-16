@@ -45,7 +45,7 @@ export default async function Landing() {
             <ThemeToggle />
             <Link
               href="/login"
-              className="font-mono text-xs uppercase tracking-widest text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              className="-mx-2 rounded-md px-2 py-2 font-mono text-xs uppercase tracking-widest text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Sign in
             </Link>
@@ -64,7 +64,7 @@ export default async function Landing() {
               </p>
             </Reveal>
             {/* Headline renders instantly (LCP element — not gated behind a fade). */}
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.02] tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="mt-5 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl sm:leading-[1.05] md:text-6xl">
               Your climb to the <span className="swash">cut-off</span> starts here.
             </h1>
             <Reveal onMount delay={0.1}>
@@ -78,7 +78,7 @@ export default async function Landing() {
                 <GoogleButton />
                 <Link
                   href="#how"
-                  className="font-mono text-xs uppercase tracking-widest text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  className="rounded-md px-1 py-2 font-mono text-xs uppercase tracking-widest text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   How it works ↓
                 </Link>
@@ -160,7 +160,7 @@ export default async function Landing() {
       <section>
         <div className="mx-auto max-w-6xl px-5 py-16">
           <Reveal>
-            <div className="flex flex-col items-start gap-6 rounded-3xl bg-primary p-10 text-primary-foreground md:p-14">
+            <div className="flex flex-col items-start gap-6 rounded-3xl bg-primary p-6 text-primary-foreground sm:p-10 md:p-14">
               <LogoMark className="size-8" />
               <h2 className="max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">
                 Sign in and enter your batch.
@@ -179,10 +179,10 @@ export default async function Landing() {
       <footer className="border-t">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 sm:flex-row sm:items-center sm:justify-between">
           <Logo />
-          <div className="flex items-center gap-6 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
-            <Link href="/terms" className="hover:text-foreground">Terms</Link>
-            <span>© 2026 Genforce</span>
+          <div className="-mx-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground sm:gap-4">
+            <Link href="/privacy" className="rounded-md px-2 py-1.5 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Privacy</Link>
+            <Link href="/terms" className="rounded-md px-2 py-1.5 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Terms</Link>
+            <span className="px-2">© 2026 Genforce</span>
           </div>
         </div>
       </footer>

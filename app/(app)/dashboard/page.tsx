@@ -31,7 +31,7 @@ export default async function Dashboard() {
             <Reveal key={r.href} onMount delay={0.05 + i * 0.06}>
               <Link
                 href={r.href}
-                className="group block rounded-2xl border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40"
+                className="group block rounded-2xl border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/40 focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <p className="text-xl font-semibold">{r.label}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{r.desc}</p>

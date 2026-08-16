@@ -40,7 +40,7 @@ export default async function AdminLessonsPage({
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-2xl font-extrabold tracking-tight">Lessons</h1>
-        <div className="w-80">
+        <div className="w-full sm:w-80">
           <label className={LABEL}>Subject</label>
           <NavSelect param="subject" value={activeId} placeholder="Pick a subject" options={options} />
         </div>
@@ -77,7 +77,7 @@ export default async function AdminLessonsPage({
                       <div className="flex-1"><label className={LABEL}>Title *</label><input name="title" required defaultValue={l.title} className={FIELD} /></div>
                     </div>
                     <div><label className={LABEL}>Video link *</label><input name="playUrl" required defaultValue={l.playUrl ?? ""} className={FIELD} /></div>
-                    <div className="grid gap-4 sm:grid-cols-4">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                       <div><label className={LABEL}>Source</label><SourceSelect value={l.source} /></div>
                       <div><label className={LABEL}>Recorded on</label><input name="recordedOn" type="date" defaultValue={l.recordedOn ?? ""} className={FIELD} /></div>
                       <div><label className={LABEL}>Duration (min)</label><input name="durationMin" type="number" min="0" defaultValue={l.durationSec ? Math.round(l.durationSec / 60) : ""} className={FIELD} /></div>
