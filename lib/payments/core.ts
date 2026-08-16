@@ -65,7 +65,17 @@ export async function settleOrder(db: Db, razorpayOrderId: string, paymentId: st
   })
 }
 
-export class OrderError extends Error {}
+/** Expected, caller-actionable checkout failures. The `code` lets the server
+ *  action map to a safe user-facing message / navigation without string-matching
+ *  (thrown Error messages are redacted in production builds). */
+export type OrderErrorCode = "not_found" | "free" | "already_enrolled"
+export class OrderError extends Error {
+  readonly code: OrderErrorCode
+  constructor(message: string, code: OrderErrorCode) {
+    super(message)
+    this.code = code
+  }
+}
 
 /** Create a Razorpay (or mock) order for a paid, unowned course scoped to the
  *  user's active exam. Snapshots the price server-side. */
@@ -77,13 +87,13 @@ export async function createOrder(
   const batch = await db.query.batches.findFirst({
     where: and(eq(batches.id, batchId), eq(batches.examId, examId)),
   })
-  if (!batch) throw new OrderError("course not found")
-  if (!isPaid(batch)) throw new OrderError("course is free")
+  if (!batch) throw new OrderError("course not found", "not_found")
+  if (!isPaid(batch)) throw new OrderError("course is free", "free")
 
   const ent = await db.query.entitlements.findFirst({
     where: and(eq(entitlements.userId, userId), eq(entitlements.batchId, batchId)),
   })
-  if (isLive(ent)) throw new OrderError("already enrolled")
+  if (isLive(ent)) throw new OrderError("already enrolled", "already_enrolled")
 
   const amountInr = batch.priceInr! // isPaid guarantees non-null > 0
   const receipt = `gf_${batchId.slice(0, 8)}_${userId.slice(0, 8)}_${Date.now()}`

@@ -51,7 +51,15 @@ export function CheckoutButton({
     setBusy(true)
     setError(null)
     try {
-      const { orderId, amountInr, keyId } = await createCourseOrder(batchId)
+      const res = await createCourseOrder(batchId)
+      if (!res.ok) {
+        // Free or already-owned: nothing to pay — just open the course.
+        if (res.code === "free" || res.code === "already_enrolled") return done()
+        setError(res.message)
+        setBusy(false)
+        return
+      }
+      const { orderId, amountInr, keyId } = res
 
       // No real key = mock/offline mode: settle directly via the dev endpoint.
       if (!keyId) {
@@ -60,13 +68,21 @@ export function CheckoutButton({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ razorpay_order_id: orderId }),
         })
-        if (!r.ok) throw new Error("Could not complete the demo payment.")
+        if (!r.ok) {
+          setError("Could not complete the demo payment.")
+          setBusy(false)
+          return
+        }
         done()
         return
       }
 
       const ok = await loadCheckoutScript()
-      if (!ok || !window.Razorpay) throw new Error("Could not load the payment gateway.")
+      if (!ok || !window.Razorpay) {
+        setError("Could not load the payment gateway. Check your connection and try again.")
+        setBusy(false)
+        return
+      }
 
       const rzp = new window.Razorpay({
         key: keyId,
@@ -95,8 +111,11 @@ export function CheckoutButton({
         setBusy(false)
       })
       rzp.open()
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong.")
+    } catch {
+      // Never surface a raw exception message: a thrown server-action error is
+      // redacted to an opaque digest string in production, and other throws
+      // here (transport, gateway init) aren't user-meaningful either.
+      setError("Something went wrong starting the payment. Please try again.")
       setBusy(false)
     }
   }

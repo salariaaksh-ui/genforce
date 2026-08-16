@@ -32,8 +32,8 @@ export default async function TestsPage() {
             <div
               className="flex h-full items-center justify-between gap-4 rounded-2xl border bg-card p-5"
             >
-              <div>
-                <p className="font-semibold">{t.setName ?? "Practice set"}</p>
+              <div className="min-w-0">
+                <p className="truncate font-semibold">{t.setName ?? "Practice set"}</p>
                 <p className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
                   {[t.timeLimitMin ? `${t.timeLimitMin} min` : null, t.formDate]
                     .filter(Boolean)

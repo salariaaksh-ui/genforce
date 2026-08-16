@@ -24,7 +24,7 @@ export default async function AdminSubjectsPage({
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-2xl font-extrabold tracking-tight">Subjects</h1>
-        <div className="w-72">
+        <div className="w-full sm:w-72">
           <label className={LABEL}>Batch</label>
           <NavSelect param="batch" value={activeId} placeholder="Pick a batch" options={options} />
         </div>

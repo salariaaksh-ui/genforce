@@ -34,7 +34,7 @@ export default async function PdfsPage() {
                 href={f.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent"
+                className="flex items-center justify-between gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               >
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{f.filename}</span>

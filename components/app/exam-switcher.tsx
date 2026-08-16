@@ -13,7 +13,7 @@ export function ExamSwitcher({ currentLabel }: { currentLabel: string }) {
     <>
       <button
         onClick={() => ref.current?.showModal()}
-        className="rounded-full border px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="rounded-full border px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-widest hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         {currentLabel}
       </button>
