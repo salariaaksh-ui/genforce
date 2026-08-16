@@ -45,10 +45,28 @@ export async function createCourseOrder(batchId: string): Promise<CreateOrderRes
     if (err instanceof OrderError) {
       return { ok: false, code: err.code, message: ORDER_ERROR_MESSAGES[err.code] }
     }
-    // Unexpected (Razorpay API/keys/network, DB, …). Log the real cause so it
-    // shows in the server (Vercel) logs — correlatable with the client's error
-    // digest — and hand the student a generic, non-leaky message.
+    // Unexpected (Razorpay keys/API/network, DB, …). Log the real cause to the
+    // server (Vercel) logs, and return a distinct — but still non-leaky — message
+    // per category so the failure is diagnosable on-screen without the logs:
+    //   • keys absent  → "not set up yet"
+    //   • keys present but Razorpay rejected them → "couldn't reach the gateway"
     console.error("[checkout] createCourseOrder failed for batch", batchId, err)
+    const detail = err instanceof Error ? err.message : ""
+    if (detail.includes("not configured")) {
+      return {
+        ok: false,
+        code: "unavailable",
+        message: "Online payments aren’t set up yet. Please contact support to enrol.",
+      }
+    }
+    if (detail.startsWith("Razorpay order failed")) {
+      return {
+        ok: false,
+        code: "unavailable",
+        message:
+          "We couldn’t reach the payment gateway. Please try again shortly, or contact support if it keeps happening.",
+      }
+    }
     return {
       ok: false,
       code: "unavailable",
