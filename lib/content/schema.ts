@@ -8,7 +8,7 @@ const lesson = z
   .object({
     idx: z.number().int().positive(),
     title: z.string().min(1),
-    source: z.enum(["zoom", "vimeo", "youtube"]),
+    source: z.enum(["bunny", "zoom", "vimeo", "youtube"]),
     playUrl: urlStr.optional(),
     playToken: z.string().min(1).optional(),
     durationSec: z.number().int().positive().optional(),

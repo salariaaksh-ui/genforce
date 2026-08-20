@@ -58,14 +58,20 @@ is **content you provide** and we load per exam:
 |-----------------|---------------------------------------------------------------------|
 | Batch           | name, cycle (optional), display order                               |
 | Subject         | batch it belongs to, name, teacher/mentor name, display order       |
-| Lesson (video)  | subject, order no., title, source (Vimeo/Zoom), embeddable video URL, duration (optional), recorded date (optional) |
+| Lesson (video)  | subject, order no., title, source (Bunny/YouTube/Vimeo/Zoom), embeddable video URL, duration (optional), recorded date (optional) |
 | Study PDF       | exam, filename, file URL                                            |
 | Gallery image   | exam, image URL                                                     |
 | Practice test   | exam, set name, time limit (min), Google Form URL, date (optional)  |
 
 Notes:
-- Video URL must be **embeddable** (Vimeo player URL, or a Zoom recording share
-  URL). Not the editor/admin link.
+- **Video hosting is Bunny Stream (Bunny.net).** In the Bunny dashboard open a
+  video → **Embed** and paste the link it shows
+  (`https://iframe.mediadelivery.net/play/<library>/<video-id>` or the `…/embed/…`
+  form). The player normalizes either to the embeddable form automatically, and
+  keeps any `?token=…&expires=…` query if the library has embed-token security on.
+- YouTube (unlisted), Vimeo, and Zoom share URLs still work too — just pick the
+  matching **source**. In every case paste the **embeddable/share** link, never
+  the editor/admin link.
 - Practice-test URL must be the **`/viewform`** link, never the form's edit URL.
 - PDFs are de-duplicated automatically (same file can't be added twice per exam).
 

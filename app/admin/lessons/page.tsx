@@ -4,12 +4,12 @@ import { createLessonAction, updateLessonAction, deleteLessonAction } from "../a
 import { FIELD, LABEL, BTN, CARD } from "../_styles"
 import { ConfirmButton, NavSelect } from "../_ui"
 
-const SOURCES = ["youtube", "vimeo", "zoom"]
+const SOURCES = ["bunny", "youtube", "vimeo", "zoom"]
 const MB = 1024 * 1024
 
 function SourceSelect({ value }: { value?: string }) {
   return (
-    <select name="source" defaultValue={value ?? "youtube"} className={FIELD}>
+    <select name="source" defaultValue={value ?? "bunny"} className={FIELD}>
       {SOURCES.map((s) => (
         <option key={s} value={s}>{s}</option>
       ))}
@@ -55,7 +55,7 @@ export default async function AdminLessonsPage({
             <input type="hidden" name="subjectId" value={activeId} />
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2"><label className={LABEL}>Title *</label><input name="title" required className={FIELD} placeholder="Percentage Class 1" /></div>
-              <div className="sm:col-span-2"><label className={LABEL}>Video link *</label><input name="playUrl" required className={FIELD} placeholder="https://youtu.be/…  (YouTube unlisted, Vimeo, or Zoom)" /></div>
+              <div className="sm:col-span-2"><label className={LABEL}>Video link *</label><input name="playUrl" required className={FIELD} placeholder="https://iframe.mediadelivery.net/play/…  (Bunny Stream, YouTube unlisted, Vimeo, or Zoom)" /></div>
               <div><label className={LABEL}>Source</label><SourceSelect /></div>
               <div><label className={LABEL}>Recorded on</label><input name="recordedOn" type="date" className={FIELD} /></div>
               <div><label className={LABEL}>Duration (minutes)</label><input name="durationMin" type="number" min="0" className={FIELD} placeholder="81" /></div>

@@ -1,7 +1,7 @@
 /** Normalize a pasted video link to an embeddable player URL, so the admin can
- *  paste whatever YouTube/Vimeo gives them (watch link, short link, share link)
- *  and the lesson still plays. Unknown hosts (Zoom shares, already-embed URLs)
- *  pass through unchanged. */
+ *  paste whatever Bunny Stream / YouTube / Vimeo gives them (embed, share, watch
+ *  or short link) and the lesson still plays. Unknown hosts (Zoom shares,
+ *  already-embed URLs) pass through unchanged. */
 export function toEmbedUrl(url: string): string {
   let u: URL
   try {
@@ -32,6 +32,18 @@ export function toEmbedUrl(url: string): string {
   if (host === "vimeo.com") {
     const id = u.pathname.split("/").filter(Boolean)[0]
     return /^\d+$/.test(id) ? `https://player.vimeo.com/video/${id}` : url
+  }
+
+  // Bunny Stream → https://iframe.mediadelivery.net/embed/<libraryId>/<videoId>
+  // The shareable "play" link and the embed link both carry the library id and
+  // video GUID in the path; normalize both to the embed form. The query string
+  // is preserved so autoplay flags and (for token-authenticated libraries) the
+  // `?token=…&expires=…` signature the admin pastes keep working.
+  if (host === "iframe.mediadelivery.net" || host === "mediadelivery.net") {
+    const [kind, libraryId, videoId] = u.pathname.split("/").filter(Boolean)
+    if ((kind === "play" || kind === "embed") && libraryId && videoId) {
+      return `https://iframe.mediadelivery.net/embed/${libraryId}/${videoId}${u.search}`
+    }
   }
 
   return url
