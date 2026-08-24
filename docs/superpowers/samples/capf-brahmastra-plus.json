@@ -1,0 +1,12 @@
+{
+  "exam": "capf",
+  "batches": [
+    {
+      "name": "Brahmastra Plus",
+      "cycle": "CAPF 2027",
+      "thumbnail": "/courses/brahmastra-plus.jpg",
+      "priceInr": 300,
+      "description": "Current Affairs Initiative for CAPF 2027. Includes daily PIB / news updates, a daily 5-MCQ quiz, the Brahmastra Monthly Magazine, the PIB Cutout Magazine, Monthly Top 100 most-expected questions, the Top 5 current-affairs tests before the exam, and a dedicated current-affairs Telegram channel."
+    }
+  ]
+}
