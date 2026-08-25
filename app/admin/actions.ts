@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 import { db } from "@/lib/db"
 import { requireAdmin } from "@/lib/auth/admin"
 import * as a from "@/lib/db/admin"
+import { presignPut, r2Configured } from "@/lib/r2"
 
 // ── FormData parsing helpers ────────────────────────────────────────────────
 function str(fd: FormData, k: string): string | null {
@@ -123,6 +124,21 @@ export async function deleteLessonAction(fd: FormData) {
   await requireAdmin()
   await a.deleteLesson(db, reqStr(fd, "id"))
   revalidatePath("/admin/lessons")
+}
+
+// Hand the browser a short-lived presigned URL so it can upload a video file
+// straight to R2 (the file never passes through the server). Returns the object
+// key to store on the lesson (source "r2"). Admin-only.
+export async function r2PresignUploadAction(
+  filename: string
+): Promise<{ key: string; url: string }> {
+  await requireAdmin()
+  if (!r2Configured()) throw new Error("R2 is not configured — set the R2_* env vars first.")
+  const safe = (filename || "video").replace(/[^\w.\-]+/g, "_").slice(-80)
+  const key = `lessons/${crypto.randomUUID()}-${safe}`
+  const url = await presignPut(key)
+  if (!url) throw new Error("Could not create an upload URL.")
+  return { key, url }
 }
 
 // ── PDFs ─────────────────────────────────────────────────────────────────────

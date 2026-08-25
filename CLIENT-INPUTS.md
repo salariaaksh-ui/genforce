@@ -58,14 +58,18 @@ is **content you provide** and we load per exam:
 |-----------------|---------------------------------------------------------------------|
 | Batch           | name, cycle (optional), display order                               |
 | Subject         | batch it belongs to, name, teacher/mentor name, display order       |
-| Lesson (video)  | subject, order no., title, source (Vimeo/Zoom), embeddable video URL, duration (optional), recorded date (optional) |
+| Lesson (video)  | subject, order no., title, source (R2 upload / Vimeo / YouTube / Zoom), video (an uploaded R2 file or an embeddable URL), duration (optional), recorded date (optional) |
 | Study PDF       | exam, filename, file URL                                            |
 | Gallery image   | exam, image URL                                                     |
 | Practice test   | exam, set name, time limit (min), Google Form URL, date (optional)  |
 
 Notes:
-- Video URL must be **embeddable** (Vimeo player URL, or a Zoom recording share
-  URL). Not the editor/admin link.
+- **Self-hosted (Cloudflare R2):** upload the video file straight from the admin
+  Lessons page — it streams from your own R2 bucket via secure, expiring links,
+  with no per-view bandwidth fees. Needs the four `R2_*` values in `.env` (see
+  `.env.example`). This is the cheapest option for lots of viewing.
+- **External link:** alternatively paste an **embeddable** URL (Vimeo player URL,
+  a YouTube link, or a Zoom recording share URL) — not the editor/admin link.
 - Practice-test URL must be the **`/viewform`** link, never the form's edit URL.
 - PDFs are de-duplicated automatically (same file can't be added twice per exam).
 

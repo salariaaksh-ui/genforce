@@ -145,7 +145,7 @@ export const lessons = pgTable(
       .references(() => subjects.id, { onDelete: "cascade" }),
     idx: integer("idx").notNull(),
     title: text("title").notNull(),
-    source: text("source").notNull(), // zoom | vimeo
+    source: text("source").notNull(), // zoom | vimeo | youtube | r2 (r2: playUrl holds the object key)
     playToken: text("play_token"),
     playUrl: text("play_url"),
     durationSec: integer("duration_sec"),

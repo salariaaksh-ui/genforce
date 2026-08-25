@@ -3,8 +3,10 @@ import { listExams, listBatches, listSubjects, listLessons } from "@/lib/db/admi
 import { createLessonAction, updateLessonAction, deleteLessonAction } from "../actions"
 import { FIELD, LABEL, BTN, CARD } from "../_styles"
 import { ConfirmButton, NavSelect } from "../_ui"
+import { r2Configured } from "@/lib/r2"
+import { R2Uploader } from "@/components/admin/r2-uploader"
 
-const SOURCES = ["youtube", "vimeo", "zoom"]
+const SOURCES = ["youtube", "vimeo", "zoom", "r2"]
 const MB = 1024 * 1024
 
 function SourceSelect({ value }: { value?: string }) {
@@ -63,6 +65,26 @@ export default async function AdminLessonsPage({
             </div>
             <button type="submit" className={BTN}>Add lesson</button>
           </form>
+
+          {r2Configured() && (
+            <form action={createLessonAction} className={`${CARD} space-y-4`}>
+              <div>
+                <p className="font-semibold">Upload a video to R2 (self-hosted)</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  The file uploads straight to your R2 bucket and streams via secure, expiring links.
+                </p>
+              </div>
+              <input type="hidden" name="subjectId" value={activeId} />
+              <input type="hidden" name="source" value="r2" />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2"><label className={LABEL}>Title *</label><input name="title" required className={FIELD} placeholder="Percentage Class 1" /></div>
+                <div className="sm:col-span-2"><R2Uploader /></div>
+                <div><label className={LABEL}>Recorded on</label><input name="recordedOn" type="date" className={FIELD} /></div>
+                <div><label className={LABEL}>Duration (minutes)</label><input name="durationMin" type="number" min="0" className={FIELD} placeholder="81" /></div>
+              </div>
+              <button type="submit" className={BTN}>Add lesson</button>
+            </form>
+          )}
 
           <div className="space-y-4">
             {lessons.length === 0 ? (

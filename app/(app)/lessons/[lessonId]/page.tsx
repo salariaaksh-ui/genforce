@@ -2,6 +2,8 @@ import { notFound } from "next/navigation"
 import { requireActiveExam, getLesson, assertBatchUnlocked } from "@/lib/db/queries"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { LessonPlayer } from "@/components/app/lesson-player"
+import { VideoFilePlayer } from "@/components/app/video-file-player"
+import { presignGet } from "@/lib/r2"
 import { Reveal } from "@/components/motion/reveal"
 import { formatDuration, formatDate, formatFileSize } from "@/lib/format"
 
@@ -27,6 +29,11 @@ export default async function LessonPage({
   if (!found) notFound()
   const { lesson, subject, batch } = found
   await assertBatchUnlocked(batch, user.id)
+
+  // Self-hosted (R2) videos store an object key; presign a short-lived streaming
+  // URL server-side. Everything else is an embeddable link handled by an iframe.
+  const r2Src =
+    lesson.source === "r2" && lesson.playUrl ? await presignGet(lesson.playUrl) : null
 
   return (
     <div className="space-y-6">
@@ -57,7 +64,15 @@ export default async function LessonPage({
       </Reveal>
 
       <Reveal onMount delay={0.1}>
-        {lesson.playUrl ? (
+        {lesson.source === "r2" ? (
+          r2Src ? (
+            <VideoFilePlayer src={r2Src} title={lesson.title} />
+          ) : (
+            <div className="flex aspect-video w-full items-center justify-center rounded-2xl border bg-muted text-muted-foreground">
+              Video not available yet.
+            </div>
+          )
+        ) : lesson.playUrl ? (
           <LessonPlayer src={lesson.playUrl} title={lesson.title} />
         ) : (
           <div className="flex aspect-video w-full items-center justify-center rounded-2xl border bg-muted text-muted-foreground">
