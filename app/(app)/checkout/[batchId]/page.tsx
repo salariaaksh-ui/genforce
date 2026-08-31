@@ -3,8 +3,10 @@ import { Check, ShieldCheck } from "lucide-react"
 import { requireActiveExam, getBatch, getEntitlement } from "@/lib/db/queries"
 import { isPaid, isLive } from "@/lib/payments/gate"
 import { formatInr } from "@/lib/format"
+import { offerActive, discountedInr } from "@/lib/offer"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { Reveal } from "@/components/motion/reveal"
+import { OfferBanner } from "@/components/offer/offer-banner"
 import { CheckoutButton } from "./checkout-client"
 
 export async function generateMetadata({
@@ -34,6 +36,10 @@ export default async function CheckoutPage({
   const access =
     batch.accessDays != null ? `${batch.accessDays} days of access` : "Lifetime access"
 
+  const price = batch.priceInr!
+  const onOffer = offerActive()
+  const total = onOffer ? discountedInr(price) : price
+
   return (
     <div className="mx-auto max-w-lg space-y-8">
       <Breadcrumbs
@@ -43,6 +49,8 @@ export default async function CheckoutPage({
           { label: "Checkout" },
         ]}
       />
+
+      <OfferBanner />
 
       <Reveal onMount>
         <div className="overflow-hidden rounded-2xl border bg-card">
@@ -75,10 +83,20 @@ export default async function CheckoutPage({
 
           <div className="flex items-center justify-between p-6">
             <span className="text-muted-foreground">Total</span>
-            <span className="font-display text-3xl font-extrabold">
-              {formatInr(batch.priceInr!)}
+            <span className="flex items-baseline gap-2.5">
+              {onOffer && (
+                <span className="font-display text-lg font-semibold text-muted-foreground/70 line-through">
+                  {formatInr(price)}
+                </span>
+              )}
+              <span className="font-display text-3xl font-extrabold">{formatInr(total)}</span>
             </span>
           </div>
+          {onOffer && (
+            <p className="border-t px-6 py-3 text-center text-xs font-medium text-primary">
+              You save {formatInr(price - total)} with the early-bird offer
+            </p>
+          )}
         </div>
       </Reveal>
 

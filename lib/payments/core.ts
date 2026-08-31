@@ -4,6 +4,7 @@ import * as schema from "@/lib/db/schema"
 import { batches, entitlements, orders } from "@/lib/db/schema"
 import { isPaid, isLive } from "./gate"
 import { createRazorpayOrder, publicKeyId } from "./razorpay"
+import { offerActive, discountedInr } from "../offer"
 
 // Payment core, db-injected (same pattern as importContent) so the whole flow
 // runs under a fresh PGlite in tests. Routes/actions pass the app db.
@@ -85,7 +86,10 @@ export async function createOrder(
   })
   if (isLive(ent)) throw new OrderError("already enrolled")
 
-  const amountInr = batch.priceInr! // isPaid guarantees non-null > 0
+  // isPaid guarantees non-null > 0. Apply the early-bird discount here so the
+  // charged amount is authoritative regardless of what the page displayed.
+  const base = batch.priceInr!
+  const amountInr = offerActive() ? discountedInr(base) : base
   const receipt = `gf_${batchId.slice(0, 8)}_${userId.slice(0, 8)}_${Date.now()}`
   const rz = await createRazorpayOrder(amountInr, receipt, { batchId, userId })
   await db

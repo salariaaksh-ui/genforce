@@ -4,6 +4,7 @@ import { requireActiveExam, listBatchesWithAccess } from "@/lib/db/queries"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
 import { CourseCard } from "@/components/app/course-card"
+import { OfferBanner } from "@/components/offer/offer-banner"
 
 export const metadata = { title: "Dashboard" }
 
@@ -20,6 +21,7 @@ export default async function Dashboard() {
   return (
     <div className="space-y-12">
       <h1 className="sr-only">Dashboard</h1>
+      <OfferBanner />
       <section>
         <Reveal onMount>
           <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
