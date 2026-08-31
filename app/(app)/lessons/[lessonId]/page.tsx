@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import { requireActiveExam, getLesson, assertBatchUnlocked } from "@/lib/db/queries"
+import { presignDownload, r2Configured } from "@/lib/storage/r2"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { LessonPlayer } from "@/components/app/lesson-player"
 import { Reveal } from "@/components/motion/reveal"
@@ -27,6 +28,16 @@ export default async function LessonPage({
   if (!found) notFound()
   const { lesson, subject, batch } = found
   await assertBatchUnlocked(batch, user.id)
+
+  // R2-hosted lessons store an object key in playUrl. The entitlement gate above
+  // has passed, so mint a short-lived signed GET URL and stream it in <video>.
+  // Link sources (youtube/vimeo/zoom) keep the iframe embed.
+  const isR2 = lesson.source === "r2" && Boolean(lesson.playUrl)
+  const src = isR2
+    ? r2Configured()
+      ? await presignDownload(lesson.playUrl!)
+      : null // R2 lesson but storage is off in this env → "not available"
+    : lesson.playUrl
 
   return (
     <div className="space-y-6">
@@ -57,8 +68,8 @@ export default async function LessonPage({
       </Reveal>
 
       <Reveal onMount delay={0.1}>
-        {lesson.playUrl ? (
-          <LessonPlayer src={lesson.playUrl} title={lesson.title} />
+        {src ? (
+          <LessonPlayer src={src} title={lesson.title} kind={isR2 ? "video" : "embed"} />
         ) : (
           <div className="flex aspect-video w-full items-center justify-center rounded-2xl border bg-muted text-muted-foreground">
             Video not available yet.

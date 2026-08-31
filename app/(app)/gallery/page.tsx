@@ -1,5 +1,6 @@
 import { Images } from "lucide-react"
 import { requireActiveExam, listGallery } from "@/lib/db/queries"
+import { resolveRef } from "@/lib/storage/r2"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
@@ -8,7 +9,12 @@ export const metadata = { title: "Gallery" }
 
 export default async function GalleryPage() {
   const { examId } = await requireActiveExam()
-  const imgs = await listGallery(examId)
+  const rows = await listGallery(examId)
+  // Sign R2-hosted images; external links pass through unchanged. Drop any ref
+  // that can't resolve (R2 unconfigured) so no broken tiles render.
+  const imgs = (await Promise.all(rows.map(async (img) => ({ ...img, src: await resolveRef(img.url) })))).filter(
+    (img) => img.src,
+  )
 
   return (
     <div className="space-y-8">
@@ -37,7 +43,7 @@ export default async function GalleryPage() {
                   host is fixed and added to next.config images.remotePatterns. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={img.url}
+                src={img.src}
                 alt=""
                 loading="lazy"
                 className="h-full w-full object-cover"

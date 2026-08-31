@@ -3,19 +3,9 @@ import { listExams, listBatches, listSubjects, listLessons } from "@/lib/db/admi
 import { createLessonAction, updateLessonAction, deleteLessonAction } from "../actions"
 import { FIELD, LABEL, BTN, CARD } from "../_styles"
 import { ConfirmButton, NavSelect } from "../_ui"
+import { LessonSourceFields } from "../lesson-source-fields"
 
-const SOURCES = ["youtube", "vimeo", "zoom"]
 const MB = 1024 * 1024
-
-function SourceSelect({ value }: { value?: string }) {
-  return (
-    <select name="source" defaultValue={value ?? "youtube"} className={FIELD}>
-      {SOURCES.map((s) => (
-        <option key={s} value={s}>{s}</option>
-      ))}
-    </select>
-  )
-}
 
 export default async function AdminLessonsPage({
   searchParams,
@@ -55,8 +45,7 @@ export default async function AdminLessonsPage({
             <input type="hidden" name="subjectId" value={activeId} />
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2"><label className={LABEL}>Title *</label><input name="title" required className={FIELD} placeholder="Percentage Class 1" /></div>
-              <div className="sm:col-span-2"><label className={LABEL}>Video link *</label><input name="playUrl" required className={FIELD} placeholder="https://youtu.be/…  (YouTube unlisted, Vimeo, or Zoom)" /></div>
-              <div><label className={LABEL}>Source</label><SourceSelect /></div>
+              <LessonSourceFields />
               <div><label className={LABEL}>Recorded on</label><input name="recordedOn" type="date" className={FIELD} /></div>
               <div><label className={LABEL}>Duration (minutes)</label><input name="durationMin" type="number" min="0" className={FIELD} placeholder="81" /></div>
               <div><label className={LABEL}>Size (MB)</label><input name="sizeMb" type="number" min="0" className={FIELD} placeholder="321" /></div>
@@ -76,9 +65,8 @@ export default async function AdminLessonsPage({
                       <span className="grid size-7 flex-none place-items-center rounded-full bg-secondary font-mono text-xs">{l.idx}</span>
                       <div className="flex-1"><label className={LABEL}>Title *</label><input name="title" required defaultValue={l.title} className={FIELD} /></div>
                     </div>
-                    <div><label className={LABEL}>Video link *</label><input name="playUrl" required defaultValue={l.playUrl ?? ""} className={FIELD} /></div>
-                    <div className="grid gap-4 sm:grid-cols-4">
-                      <div><label className={LABEL}>Source</label><SourceSelect value={l.source} /></div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <LessonSourceFields defaultSource={l.source} defaultPlayUrl={l.playUrl ?? ""} />
                       <div><label className={LABEL}>Recorded on</label><input name="recordedOn" type="date" defaultValue={l.recordedOn ?? ""} className={FIELD} /></div>
                       <div><label className={LABEL}>Duration (min)</label><input name="durationMin" type="number" min="0" defaultValue={l.durationSec ? Math.round(l.durationSec / 60) : ""} className={FIELD} /></div>
                       <div><label className={LABEL}>Size (MB)</label><input name="sizeMb" type="number" min="0" defaultValue={l.sizeBytes ? Math.round(l.sizeBytes / MB) : ""} className={FIELD} /></div>

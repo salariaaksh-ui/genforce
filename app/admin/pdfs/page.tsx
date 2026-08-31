@@ -3,6 +3,7 @@ import { listExams, listPdfs } from "@/lib/db/admin"
 import { createPdfAction, deletePdfAction } from "../actions"
 import { FIELD, LABEL, BTN, CARD } from "../_styles"
 import { ConfirmButton, NavSelect } from "../_ui"
+import { FileField } from "../file-field"
 
 export default async function AdminPdfsPage({
   searchParams,
@@ -29,7 +30,7 @@ export default async function AdminPdfsPage({
         <input type="hidden" name="examId" value={active?.id} />
         <div className="grid gap-4 sm:grid-cols-2">
           <div><label className={LABEL}>Title *</label><input name="filename" required className={FIELD} placeholder="Physics formula sheet" /></div>
-          <div><label className={LABEL}>PDF link *</label><input name="url" required className={FIELD} placeholder="https://…/file.pdf" /></div>
+          <FileField name="url" label="PDF" prefix="pdfs" accept="application/pdf,.pdf" placeholder="https://…/file.pdf" />
         </div>
         <button type="submit" className={BTN}>Add PDF</button>
       </form>

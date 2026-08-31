@@ -1,8 +1,9 @@
 import { db } from "@/lib/db"
 import { listExams, listGallery } from "@/lib/db/admin"
 import { createGalleryAction, deleteGalleryAction } from "../actions"
-import { FIELD, LABEL, BTN, CARD } from "../_styles"
+import { LABEL, BTN, CARD } from "../_styles"
 import { ConfirmButton, NavSelect } from "../_ui"
+import { FileField } from "../file-field"
 
 export default async function AdminGalleryPage({
   searchParams,
@@ -27,7 +28,7 @@ export default async function AdminGalleryPage({
       <form action={createGalleryAction} className={`${CARD} space-y-4`}>
         <p className="font-semibold">Add an image to {active?.name}</p>
         <input type="hidden" name="examId" value={active?.id} />
-        <div><label className={LABEL}>Image link *</label><input name="url" required className={FIELD} placeholder="https://…/image.jpg" /></div>
+        <FileField name="url" label="Image" prefix="gallery" accept="image/*" placeholder="https://…/image.jpg" />
         <button type="submit" className={BTN}>Add image</button>
       </form>
 

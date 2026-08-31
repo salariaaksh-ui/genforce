@@ -1,5 +1,6 @@
 import { FileText } from "lucide-react"
 import { requireActiveExam, listPdfs } from "@/lib/db/queries"
+import { resolveRef } from "@/lib/storage/r2"
 import { Breadcrumbs } from "@/components/app/breadcrumbs"
 import { Reveal } from "@/components/motion/reveal"
 import { EmptyState } from "@/components/app/empty-state"
@@ -9,7 +10,12 @@ export const metadata = { title: "PDFs" }
 
 export default async function PdfsPage() {
   const { examId } = await requireActiveExam()
-  const files = await listPdfs(examId)
+  const rows = await listPdfs(examId)
+  // Sign R2-hosted files; external links pass through unchanged. Drop any ref
+  // that can't resolve (R2 unconfigured) so no dead links render.
+  const files = (await Promise.all(rows.map(async (f) => ({ ...f, href: await resolveRef(f.url) })))).filter(
+    (f) => f.href,
+  )
 
   return (
     <div className="space-y-8">
@@ -31,7 +37,7 @@ export default async function PdfsPage() {
           {files.map((f) => (
             <li key={f.id}>
               <a
-                href={f.url}
+                href={f.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent"
