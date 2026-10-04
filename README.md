@@ -78,13 +78,22 @@ document.cookie = "authjs.session-token=dev-session-onboard; path=/" // onboardi
 
 ### B. Full mode (real Google sign-in, Razorpay test keys, R2)
 
-Needs the real values for `.env` — **ask the project owner; they are never
-committed to Git.** Every variable is documented in [`.env.example`](.env.example).
-Add your own Google email to `ADMIN_EMAILS` to reach `/admin`.
+Needs real values that are **never committed to Git** and only exist in the
+Neon / Google Cloud / Razorpay (test mode) / Cloudflare dashboards — ask the
+project owner. (Vercel stores them as Sensitive, so `vercel env pull` returns
+`[SENSITIVE]` placeholders, not values.) Every variable is documented in
+[`.env.example`](.env.example). Add your own Google email to `ADMIN_EMAILS` to
+reach `/admin`.
 
-> ⚠️ If `DATABASE_URL` points at the **production Neon database**, your local app,
-> `db:import`, and every script write to live data. Prefer offline mode, or use a
-> separate Neon branch for development.
+> ⚠️ Never point local `DATABASE_URL` at the **production Neon database** — the
+> app, `db:import` and every script would write to live data. Use offline mode,
+> or a separate Neon branch for development.
+
+## Shared Claude memory
+
+Project notes for Claude live in [`docs/memory/`](docs/memory/MEMORY.md) and are
+shared through git — `git pull` to get the other developer's notes. Open Claude
+Code **in this folder** so `CLAUDE.md` (and the memory index) loads.
 
 ---
 

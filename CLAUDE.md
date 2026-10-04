@@ -8,6 +8,25 @@ agency real-estate standards do not apply here. Setup, scripts and project map:
 
 @AGENTS.md
 
+## Shared memory (two developers, one Claude account, separate PCs)
+
+Project memory lives **in this repo** at `docs/memory/`, so every developer's
+Claude reads and writes the same notes through git. Index (auto-loaded):
+
+@docs/memory/MEMORY.md
+
+- **For this project, save memories to `docs/memory/` — never to the personal
+  `~/.claude/projects/.../memory/` folder** (that one stays on one PC only).
+- Same format as personal memory: one topic per file with `name` / `description`
+  / `type` frontmatter, plus a one-line pointer in `docs/memory/MEMORY.md`.
+  Update an existing file rather than adding a duplicate; fix or delete notes
+  that turn out wrong. Read a topic file when its index line is relevant.
+- Save what the code and git history don't already say: decisions, client
+  requests, open issues, traps. Write "owner" / "client", not "the user".
+- `git pull` before editing memory; commit memory changes together with the
+  related work on its branch.
+- This repo is **public**: no secrets, emails, or customer data in memory files.
+
 ## Rules
 
 - **`master` auto-deploys to production (Vercel).** Work on a branch + PR; never push untested work to `master`.

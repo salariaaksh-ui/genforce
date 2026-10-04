@@ -2,6 +2,8 @@
 
 _Last updated: 14 August 2026_
 
+> **Superseded (Aug 2026):** the batches, prices and demo content below are out of date. Current state lives in `docs/memory/current-state.md`.
+
 Genforce is a learning platform for Indian defence-entrance exam prep (AFCAT / NDA / CDS / CAPF). Students sign in with Google, browse courses, and unlock video lessons, notes, galleries, and practice tests. Paid courses are unlocked per-course.
 
 ---
