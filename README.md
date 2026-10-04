@@ -6,6 +6,7 @@ video lessons, PDFs, galleries and practice tests. Paid batches unlock per cours
 via Razorpay.
 
 - **Live:** https://genforce-sooty.vercel.app (temporary Vercel domain)
+- **New developer? Start here:** [`docs/ONBOARDING.md`](docs/ONBOARDING.md) (Claude walks you through it)
 - **Status / what the client still owes:** [`docs/HANDOFF.md`](docs/HANDOFF.md), [`CLIENT-INPUTS.md`](CLIENT-INPUTS.md)
 
 > ⚠️ **`master` auto-deploys to the live site on Vercel.** Every push to `master`

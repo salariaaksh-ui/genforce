@@ -1,7 +1,7 @@
 # Project CLAUDE.md — Genforce LMS
 
 Defence-exam prep LMS (AFCAT / NDA / CDS / CAPF). Not a real-estate site — the
-agency real-estate standards do not apply here. Setup, scripts and project map:
+agency real-estate standards do not apply here. New developer setting up a PC → follow `docs/ONBOARDING.md` with them. Setup, scripts and project map:
 `README.md`. Status and client blockers: `docs/HANDOFF.md`, `CLIENT-INPUTS.md`.
 
 ## Next.js version rules
