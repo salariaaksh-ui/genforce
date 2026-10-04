@@ -31,7 +31,7 @@ export default async function AdminHome() {
           <Link
             key={href}
             href={href}
-            className={`${CARD} block transition hover:-translate-y-0.5 hover:border-primary/40`}
+            className={`${CARD} block transition hover:-translate-y-0.5 hover:border-primary/40 focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
           >
             <p className="font-semibold">{label}</p>
             <p className="mt-1 text-sm text-muted-foreground">{hint}</p>

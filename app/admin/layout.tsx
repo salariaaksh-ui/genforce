@@ -25,14 +25,21 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="border-b bg-card">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
           <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">Genforce Admin</span>
-          <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+          <nav className="-mx-2 flex flex-wrap gap-x-1 gap-y-1 text-sm">
             {NAV.map(([label, href]) => (
-              <Link key={href} href={href} className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link
+                key={href}
+                href={href}
+                className="rounded-md px-2 py-1.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
                 {label}
               </Link>
             ))}
           </nav>
-          <Link href="/dashboard" className="ml-auto text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <Link
+            href="/dashboard"
+            className="ml-auto rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
             View site →
           </Link>
         </div>

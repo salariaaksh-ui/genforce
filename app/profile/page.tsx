@@ -24,10 +24,10 @@ export default async function Profile() {
       />
 
       <section>
-        <h1 className="font-display text-3xl font-extrabold tracking-tight">
+        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
           {row?.name ?? "Student"}
         </h1>
-        <p className="mt-1 text-muted-foreground">{row?.email}</p>
+        <p className="mt-1 break-words text-muted-foreground">{row?.email}</p>
       </section>
 
       <section>
@@ -40,9 +40,12 @@ export default async function Profile() {
             defaultValue={row?.phone ?? ""}
             inputMode="numeric"
             autoComplete="tel"
+            pattern="[0-9]{10}"
+            maxLength={10}
+            title="Enter a 10-digit mobile number"
             placeholder="10-digit number"
             aria-label="Phone number"
-            className="flex-1 rounded-xl border bg-card px-4 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="min-w-0 flex-1 rounded-xl border bg-card px-4 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
           <button
             type="submit"
@@ -62,9 +65,9 @@ export default async function Profile() {
         ) : (
           <ul className="mt-3 divide-y overflow-hidden rounded-2xl border">
             {myCourses.map((c, i) => (
-              <li key={i} className="flex items-center justify-between gap-4 bg-card px-5 py-3">
-                <span className="font-semibold">{c.course}</span>
-                <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              <li key={i} className="flex flex-col gap-1 bg-card px-5 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                <span className="min-w-0 truncate font-semibold">{c.course}</span>
+                <span className="flex-none font-mono text-xs uppercase tracking-widest text-muted-foreground">
                   {c.expiresAt ? `expires ${c.expiresAt.toDateString()}` : "Lifetime"}
                 </span>
               </li>
@@ -81,7 +84,7 @@ export default async function Profile() {
       >
         <button
           type="submit"
-          className="font-mono text-xs uppercase tracking-widest text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          className="inline-flex items-center rounded-lg border px-4 py-2.5 font-mono text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           Log out
         </button>

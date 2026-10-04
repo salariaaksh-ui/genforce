@@ -10,7 +10,10 @@ import { normalizePhone } from "@/lib/validation"
 export async function updatePhone(formData: FormData) {
   const user = await requireUser()
   const phone = normalizePhone(String(formData.get("phone") ?? ""))
-  if (!phone) throw new Error("Enter a valid 10-digit phone number")
+  // Invalid/empty input is ignored rather than thrown: /profile sits outside the
+  // (app) error boundary, so a thrown Server Action here would crash the whole
+  // page to the global error screen. The input also validates in the browser.
+  if (!phone) return
   await db.update(users).set({ phone }).where(eq(users.id, user.id))
   revalidatePath("/profile")
 }

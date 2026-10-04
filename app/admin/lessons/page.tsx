@@ -30,7 +30,7 @@ export default async function AdminLessonsPage({
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-2xl font-extrabold tracking-tight">Lessons</h1>
-        <div className="w-80">
+        <div className="w-full sm:w-80">
           <label className={LABEL}>Subject</label>
           <NavSelect param="subject" value={activeId} placeholder="Pick a subject" options={options} />
         </div>

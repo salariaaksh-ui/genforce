@@ -44,7 +44,7 @@ export default async function BatchPage({
       />
       <Reveal onMount>
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">{batch.name}</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{batch.name}</h1>
           {batch.cycle && (
             <p className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
               {batch.cycle}

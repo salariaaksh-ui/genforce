@@ -42,7 +42,7 @@ export default async function SubjectPage({
       />
       <Reveal onMount>
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">{subject.name}</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{subject.name}</h1>
           {subject.teacher && (
             <p className="mt-1 text-muted-foreground">with {subject.teacher}</p>
           )}
@@ -61,7 +61,7 @@ export default async function SubjectPage({
             <li key={l.id}>
               <Link
                 href={`/lessons/${l.id}`}
-                className="group flex items-center gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent"
+                className="group flex items-center gap-4 bg-card px-5 py-4 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               >
                 <span className="grid size-8 flex-none place-items-center rounded-full bg-secondary font-mono text-xs tabular-nums text-secondary-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                   {String(l.idx).padStart(2, "0")}

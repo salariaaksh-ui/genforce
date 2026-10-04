@@ -17,7 +17,7 @@ export function ConfirmButton({
       onClick={(e) => {
         if (!window.confirm(message)) e.preventDefault()
       }}
-      className="rounded-lg border px-3 py-1.5 text-xs font-medium text-destructive transition hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="inline-flex min-h-9 items-center rounded-lg border px-3 py-2 text-sm font-medium text-destructive transition hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {label}
     </button>
