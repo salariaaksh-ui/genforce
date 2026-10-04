@@ -1,37 +1,22 @@
-# Project CLAUDE.md — starter template
+# Project CLAUDE.md — Genforce LMS
 
-This is the per-project `CLAUDE.md` required by the agency standards (§5: one
-`CLAUDE.md` per project — inherit the standards, then append client specifics).
-
-## Standards (inherited)
-
-The agency-wide standards live at the repo root: **`../../CLAUDE.md`**
-(`C:\Ai Kaarigar\CLAUDE.md`) with the build workflow in `../../SKILL.md` and the
-full reference in `../../REAL-ESTATE-CHECKLIST.md`. Claude Code auto-loads the
-root `CLAUDE.md` while this project sits under `C:\Ai Kaarigar\`.
-
-⚠️ If you move a duplicated project OUTSIDE `C:\Ai Kaarigar\`, copy the agency
-`CLAUDE.md` / `SKILL.md` in alongside it so the standards travel with the project.
+Defence-exam prep LMS (AFCAT / NDA / CDS / CAPF). Not a real-estate site — the
+agency real-estate standards do not apply here. Setup, scripts and project map:
+`README.md`. Status and client blockers: `docs/HANDOFF.md`, `CLIENT-INPUTS.md`.
 
 ## Next.js version rules
 
 @AGENTS.md
 
-## Client specifics — FILL IN per project
+## Rules
 
-Replace each TODO when you duplicate this template for a client:
-
-- **Brand name / tagline:** see `lib/site.ts` (`siteConfig.name`, `tagline`)
-- **Brand colours:** `app/globals.css` → the `BRAND TOKENS` block (`--primary`, `--ring`, …)
-- **Fonts:** `app/layout.tsx` (currently Geist) — swap for the client's licensed fonts
-- **Logo:** `/public` + the logo slot in `components/site-header.tsx`
-- **Listing data source:** `lib/sample-listings.ts` → real JSON / CMS / feed (CLAUDE.md §1)
-- **Contact / NAP:** `lib/site.ts` (`siteConfig.contact`) — must match Google Business Profile
-- **Form delivery:** Resend, wired in `app/api/contact/route.ts`. Set `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` in `.env.local` (see `.env.example`) and TEST end-to-end
-- **Site URL:** `siteConfig.url` (or `NEXT_PUBLIC_SITE_URL`) for canonical/sitemap/OG
-- **Situational features scoped in:** (none by default — list here if added)
-
-## Client intake
-
-Copy the agency `intake-template.md` into this project as `intake.md` and fill it
-in with the client's answers before building.
+- **`master` auto-deploys to production (Vercel).** Work on a branch + PR; never push untested work to `master`.
+- **Default to offline dev:** `DATABASE_URL=pglite://.pglite` + `npm run db:local`. Do not run scripts, imports or migrations against the production Neon URL unless explicitly asked.
+- Never commit `.env*` files (only `.env.example`). New env var → document it in `.env.example`.
+- Schema change → edit `lib/db/schema.ts`, run `npm run db:generate`, commit the `drizzle/` migration.
+- shadcn/ui here is **Base UI**, not Radix: compose with `render={<X/>}`, not `asChild`.
+- Dynamic route `params` / `searchParams` are Promises in Next 16 — `await` them.
+- Dev server runs on port **3007** (`npm run dev`); OAuth redirect and `NEXT_PUBLIC_SITE_URL` depend on it.
+- Payments: never weaken signature verification or the `NODE_ENV` guard on mock mode (`lib/payments/razorpay.ts`).
+- Before pushing: `npm run lint && npm test && npm run build` all pass.
+- Motion respects `prefers-reduced-motion`; keep WCAG 2.2 AA (contrast, focus, labels, alt text).

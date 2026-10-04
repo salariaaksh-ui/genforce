@@ -1,166 +1,131 @@
-# Real Estate Website — Starter Template
+# Genforce LMS
 
-The reusable base every client project is duplicated from. It's intentionally
-**generic and brand-free** — no client content, neutral greyscale theme, sample
-data only. Duplicate it, swap the client-specific bits, replace the sample data,
-and follow the agency launch checklist before handoff.
+Learning platform for Indian defence-entrance exam prep (AFCAT / NDA / CDS / CAPF).
+Students sign in with Google, pick their exam, browse courses (batches), and unlock
+video lessons, PDFs, galleries and practice tests. Paid batches unlock per course
+via Razorpay.
 
-Built to the agency standards in `../CLAUDE.md`, `../SKILL.md`, and
-`../REAL-ESTATE-CHECKLIST.md`.
+- **Live:** https://genforce-sooty.vercel.app (temporary Vercel domain)
+- **Status / what the client still owes:** [`docs/HANDOFF.md`](docs/HANDOFF.md), [`CLIENT-INPUTS.md`](CLIENT-INPUTS.md)
+
+> ⚠️ **`master` auto-deploys to the live site on Vercel.** Every push to `master`
+> ships to production. Work on a branch and open a pull request; merge to
+> `master` only when it's ready to go live.
 
 ---
 
 ## Stack
 
-- **Next.js 16** (App Router, server-rendered) + **React 19** + **TypeScript**
-- **Tailwind CSS v4**
-- **shadcn/ui** primitives (built on **Base UI**, `@base-ui/react` — not Radix)
-- Forms: **react-hook-form** + **zod**, delivered via **Resend**
-- Images: **next/image**
+- **Next.js 16** (App Router) + **React 19** + **TypeScript** — read `AGENTS.md`: Next 16 has breaking changes vs older docs
+- **Tailwind CSS v4** + **shadcn/ui on Base UI** (`@base-ui/react`, not Radix — use the `render={<X/>}` prop, not `asChild`)
+- **Auth.js v5** (Google sign-in) with the Drizzle adapter
+- **Drizzle ORM** on **Postgres** — Neon in production, embedded **PGlite** for offline dev
+- **Razorpay** payments (currently Test mode)
+- **Cloudflare R2** for self-hosted videos/PDFs (optional) — see [`docs/R2-SETUP.md`](docs/R2-SETUP.md)
+- **Vitest** tests, hosted on **Vercel**
 
-## Run it
+Requires **Node 20.9+**.
+
+---
+
+## Setup
 
 ```bash
+git clone https://github.com/salariaaksh-ui/genforce.git
+cd genforce
 npm install
-npm run dev      # http://localhost:3000
-npm run build    # production build
-npm start        # serve the production build
+cp .env.example .env
 ```
 
-Regenerate the placeholder sample images any time:
+Then pick a mode:
+
+### A. Offline mode (recommended for day-to-day work — no secrets needed)
+
+Runs the whole signed-in app on an embedded Postgres in `./.pglite`. No Neon, no
+Google OAuth, no Razorpay account. Nothing you do touches production data.
+
+In `.env` set:
+
+```env
+DATABASE_URL=pglite://.pglite
+AUTH_SECRET=any-long-random-string
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
+RAZORPAY_MOCK=1
+ADMIN_EMAILS=dev-owner@example.com
+```
+
+(The Razorpay keys must be **empty** — any value, even `placeholder`, switches
+off the mock checkout.)
 
 ```bash
-node scripts/generate-placeholders.mjs
+npm run db:local   # create + seed ./.pglite (exams, demo AFCAT content, dev sessions)
+npm run dev        # http://localhost:3007
 ```
 
-### Offline dev (no database)
+Stop `npm run dev` before re-running `db:local` (both hold the `.pglite` folder).
+Delete the `.pglite` folder to start from a clean database.
 
-To run the full signed-in app with **no Postgres/Neon and no Google OAuth** —
-e.g. for local UI work or verification — use the embedded PGlite database:
-
-```bash
-npm run db:local                              # seed ./.pglite (exams + demo AFCAT content + dev sessions)
-DATABASE_URL=pglite://.pglite npm run dev -- -p 3007
-```
-
-`DATABASE_URL=pglite://<dir>` makes `lib/db/index.ts` run an in-process Postgres
-(PGlite) instead of postgres.js — no server, no install. It's a devDependency,
-imported dynamically only on that branch, so production (a `postgres://` URL) is
-unaffected. "Sign in" by setting a cookie on the page:
+**Sign in** without Google: open http://localhost:3007, then run one of these in
+the browser console and reload:
 
 ```js
-document.cookie = "authjs.session-token=dev-session-afcat; path=/"   // populated AFCAT
+document.cookie = "authjs.session-token=dev-session-afcat; path=/"   // AFCAT student, paid batch locked
+document.cookie = "authjs.session-token=dev-session-owner; path=/"   // owns the paid batch (+ /admin if in ADMIN_EMAILS)
 document.cookie = "authjs.session-token=dev-session-nda; path=/"     // empty states
-document.cookie = "authjs.session-token=dev-session-onboard; path=/" // onboarding
+document.cookie = "authjs.session-token=dev-session-onboard; path=/" // onboarding flow
 ```
 
-Stop `next dev` before re-running `db:local` (both hold the `./.pglite` dir).
+### B. Full mode (real Google sign-in, Razorpay test keys, R2)
 
-### Importing content
+Needs the real values for `.env` — **ask the project owner; they are never
+committed to Git.** Every variable is documented in [`.env.example`](.env.example).
+Add your own Google email to `ADMIN_EMAILS` to reach `/admin`.
 
-Load a content file (see `docs/superpowers/specs/2026-08-13-content-importer-design.md`):
-
-```bash
-npm run db:import path/to/afcat.json            # load into the .env DATABASE_URL (Neon)
-npm run db:import path/to/afcat.json -- --dry   # validate + report counts, no writes
-```
-
-`db:import` reads `DATABASE_URL` from `.env` (via `--env-file`), so it targets the
-real DB. To import into the **offline PGlite** DB instead, call node directly with
-the pglite URL (the `--env-file` in `db:import` would otherwise override it):
-
-```bash
-DATABASE_URL=pglite://.pglite node --import tsx scripts/import-content.mts path/to/afcat.json
-```
+> ⚠️ If `DATABASE_URL` points at the **production Neon database**, your local app,
+> `db:import`, and every script write to live data. Prefer offline mode, or use a
+> separate Neon branch for development.
 
 ---
 
-## What's pre-built
+## Scripts
 
-**Pages** (agency §3 default page set)
+| Command | What it does |
+|---|---|
+| `npm run dev` | Dev server on http://localhost:3007 (port must stay 3007 — OAuth redirect + `NEXT_PUBLIC_SITE_URL` expect it) |
+| `npm run build` / `npm start` | Production build / serve it |
+| `npm test` | Vitest unit tests |
+| `npm run lint` | ESLint |
+| `npm run db:local` | Seed the offline PGlite database |
+| `npm run db:generate` | Generate a Drizzle migration after editing `lib/db/schema.ts` (commit the new files in `drizzle/`) |
+| `npm run db:migrate` | Apply migrations to the `.env` `DATABASE_URL` |
+| `npm run db:seed` | Seed exams into the `.env` database |
+| `npm run db:import <file.json> [-- --dry]` | Import course content (format: `docs/superpowers/samples/`) |
 
-| Route | Page |
-|-------|------|
-| `/` | Home — hero, featured listings, appraisal CTA |
-| `/listings` | Listings grid (property cards) |
-| `/listings/[slug]` | Single listing — gallery, details, features, inspections, map slot, enquiry form, JSON-LD |
-| `/about` | About/agent — photo slot, bio, trust signals, testimonials |
-| `/contact` | Contact — enquiry form + NAP + map slot |
-| `/privacy`, `/terms` | Legal stubs |
-| `/not-found` | Custom 404 |
-| `/api/contact` | Placeholder enquiry endpoint |
-| `/sitemap.xml`, `/robots.txt` | Generated (native metadata routes) |
-
-**Reusable components**
-
-- `components/site-header.tsx` — logo slot, desktop nav, mobile hamburger (Sheet), skip link
-- `components/site-footer.tsx` — NAP block, legal links, licence slot
-- `components/listings/property-card.tsx` — **the most-reused piece**; photo, price, specs, CTA. Semantic tokens only, so a brand-colour swap needs zero edits here
-- `components/listings/property-specs.tsx` — beds/baths/car/area row
-- `components/listings/status-badge.tsx` — status → badge (guards against a stale "For Sale" on a sold listing)
-- `components/listings/property-gallery.tsx` — carousel gallery
-- `components/map-embed-slot.tsx` — address text + reserved, lazy map slot
-- `components/inquiry-form.tsx` — validated enquiry form (reused on listing + contact)
-
-**Data layer**
-
-- `lib/types.ts` — `Property` type = the canonical RE-1 record
-- `lib/format.ts` — price (POA/offers-over/auction), area, status, address helpers
-- `lib/sample-listings.ts` — ⚠️ **sample data, replace per client**
-- `lib/site.ts` — central per-client config (name, nav, contact/NAP, URL)
-
-**Baked-in non-negotiables** (agency §2): mobile-first, no horizontal scroll,
-preloaded hero (`priority`) + reserved aspect ratios (no CLS), WCAG 2.2 AA basics
-(skip link, focus states, alt text, labels, semantic landmarks), unique per-page
-meta + one H1, sitemap/robots that **don't block AI crawlers**.
+One-off maintenance scripts live in `scripts/` — read the header comment of each
+before running. `reset-batches.mts` is **destructive** (cascade-deletes orders).
 
 ---
 
-## What to swap per client
+## Project map
 
-Most edits are in **two files** plus the logo:
-
-1. **`lib/site.ts`** — brand name, tagline, description, nav, contact/NAP, site URL, licence number.
-2. **`app/globals.css`** — the `BRAND TOKENS` block: `--primary` (the one accent, reserved for CTAs/links), `--ring`, and the rest of the palette. Keep AA contrast.
-3. **Logo** — drop the file in `/public` and swap the logo slot in `components/site-header.tsx`.
-
-Then:
-
-- **Fonts** — `app/layout.tsx` (Geist by default) → the client's licensed fonts.
-- **Listing data** — replace `lib/sample-listings.ts` with the real source (structured JSON, Sanity CMS, Google Sheet, or MLS/IDX feed — CLAUDE.md §1). Keep the `Property` shape from `lib/types.ts`.
-- **Photos** — replace everything in `/public/sample` with real, licensed photography (and update `alt` text).
-- **Form delivery** — enquiries go through **Resend** (`app/api/contact/route.ts`). Copy `.env.example` → `.env.local` and set `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` (a verified Resend sender). Until all three are set the endpoint runs a dev fallback (logs a warning, doesn't deliver). **Test end-to-end** before launch — an undelivered form is the #1 silent launch failure.
-- **Map** — drop the client's map embed into `MapEmbedSlot` (lazy-loaded).
-- **Legal** — replace the `/privacy` and `/terms` placeholder copy with real, jurisdiction-reviewed policies.
-
-> Search the repo for `TODO(client)` and `BRAND_` to find every swap point.
+| Path | What |
+|---|---|
+| `app/(marketing)` | Public landing page |
+| `app/(app)` | Signed-in student app: dashboard, batches, subjects, lessons, PDFs, gallery, tests, checkout |
+| `app/admin` | Content admin panel (gated by `ADMIN_EMAILS`) |
+| `app/api` | Auth, Razorpay verify/webhook, mock payments (dev only), R2 upload URLs |
+| `auth.ts`, `proxy.ts` | Auth.js config; route protection (Next 16 "proxy" = middleware) |
+| `lib/db` | Drizzle schema, DB builder (postgres vs pglite), queries, seed |
+| `lib/payments`, `lib/storage` | Razorpay logic; R2 client |
+| `drizzle/` | SQL migrations |
+| `docs/` | Handoff, R2 setup, design specs and plans |
 
 ---
 
-## Duplicate this template for a new client
+## Workflow
 
-```bash
-# from C:\Ai Kaarigar
-cp -r starter-template "clients/<client-name>"
-cd "clients/<client-name>"
-rm -rf .git node_modules .next .env.local   # never carry the source project's secrets/emails
-git init
-npm install
-cp ../../intake-template.md intake.md   # then fill in the client's answers
-cp .env.example .env.local              # then set the Resend + site URL values
-npm run dev
-```
-
-Then work through: fill `intake.md` → edit `lib/site.ts` + `globals.css` tokens +
-logo → replace sample listings & photos → wire form delivery → run the
-**SKILL.md Phase 6 / Launch** checklist before handoff. While the project lives
-under `C:\Ai Kaarigar\`, it inherits the agency root `CLAUDE.md` automatically;
-if you move it out, copy the agency standards in alongside it.
-
----
-
-## Notes / gotchas
-
-- **shadcn here is Base UI, not Radix.** Compose with the `render={<X/>}` prop, not `asChild`. See any `components/ui/*.tsx` for the pattern.
-- **`params` is a Promise** in dynamic routes (Next 16) — `const { slug } = await params`.
-- `npm audit` reports advisories from the scaffold's transitive build tooling; review before launch (Phase 20) but they're not runtime issues.
+1. `git pull` before you start.
+2. Create a branch: `git checkout -b feat/short-name`.
+3. Before pushing: `npm run lint && npm test && npm run build`.
+4. Push the branch and open a pull request. Merging to `master` deploys live.

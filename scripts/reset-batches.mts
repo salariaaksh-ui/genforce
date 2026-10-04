@@ -7,7 +7,7 @@
 //   npx vercel env pull .env.production.local --environment=production
 //   node --env-file=.env.production.local --import tsx scripts/reset-batches.mts          # dry run
 //   node --env-file=.env.production.local --import tsx scripts/reset-batches.mts --apply   # do it
-import { sql, eq, inArray } from "drizzle-orm"
+import { sql, eq, inArray, type AnyColumn } from "drizzle-orm"
 import { buildDb } from "../lib/db/build"
 import { exams, batches, subjects, lessons, orders, entitlements } from "../lib/db/schema"
 
@@ -26,7 +26,7 @@ const db = await buildDb()
 // Current state + cascade impact.
 const current = await db.select({ id: batches.id, name: batches.name }).from(batches)
 const ids = current.map((b) => b.id)
-const count = async (tbl: typeof orders | typeof entitlements | typeof subjects | typeof lessons, col: any) =>
+const count = async (tbl: typeof orders | typeof entitlements | typeof subjects | typeof lessons, col: AnyColumn) =>
   ids.length === 0 ? 0 : (await db.select({ n: sql<number>`count(*)::int` }).from(tbl).where(inArray(col, ids)))[0].n
 
 console.log(`Existing batches: ${current.length}`)
